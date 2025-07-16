@@ -1,10 +1,10 @@
-package com.example.gerenciador_tarefas;
+package com.example.semestral_todo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GerenciadorTarefasApplicationTests {
+class SemestralTodoApplicationTests {
 
 	@Test
 	void contextLoads() {
