@@ -5,12 +5,11 @@ import org.hibernate.dialect.Dialect;
 import org.hibernate.dialect.identity.IdentityColumnSupport;
 import org.hibernate.dialect.identity.IdentityColumnSupportImpl;
 
-import java.sql.Types;
-
 public class SQLiteDialect extends Dialect {
 
     public SQLiteDialect() {
         super(DatabaseVersion.make(3));
+        // registerColumnType removido no Hibernate 6+
     }
 
     @Override
@@ -18,7 +17,7 @@ public class SQLiteDialect extends Dialect {
         return 1;
     }
 
-    @Override
+
     public boolean supportsIdentityColumns() {
         return true;
     }
@@ -38,6 +37,24 @@ public class SQLiteDialect extends Dialect {
         return "add column";
     }
 
+    // Desabilita suporte a ALTER TABLE (evita comandos incompatíveis)
+    @Override
+    public boolean hasAlterTable() {
+        return false;
+    }
+
+    // Evita tentativa de dropar constraints (SQLite não suporta)
+    @Override
+    public boolean dropConstraints() {
+        return false;
+    }
+
+    // Evita geração de foreign keys via ALTER TABLE
+
+    public boolean supportsForeignKeyConstraints() {
+        return false;
+    }
+
     public static class SQLiteIdentityColumnSupport extends IdentityColumnSupportImpl {
 
         @Override
@@ -52,7 +69,7 @@ public class SQLiteDialect extends Dialect {
 
         @Override
         public String getIdentityColumnString(int type) {
-            return "integer";
+            return "integer primary key autoincrement";
         }
     }
 }
