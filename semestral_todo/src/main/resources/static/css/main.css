@@ -1,6 +1,6 @@
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #e5e5e5; /* Cor mais suave para o fundo */
+  background-color: #e5e5e5;
   margin: 0;
   padding: 0;
   display: flex;
@@ -10,17 +10,17 @@ body {
 }
 
 .container {
-  background: #ffffff; /* Fundo branco para contrastar bem */
+  background: #ffffff;
   padding: 20px;
-  border-radius: 8px; /* Bordas mais arredondadas para suavizar o visual */
+  border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 350px; /* Aumentei um pouco a largura para mais conforto visual */
+  width: 350px;
 }
 
 h1 {
   text-align: center;
-  color: #333; /* Cor mais escura para o título */
-  font-size: 1.8em; /* Tamanho de fonte ajustado */
+  color: #333;
+  font-size: 1.8em;
 }
 
 ul {
@@ -29,24 +29,24 @@ ul {
 }
 
 li {
-  background: #f2f8fc; /* Um tom muito suave de azul para um visual fresco */
+  background: #f2f8fc;
   margin: 10px 0;
   padding: 12px 15px;
-  border-radius: 8px; /* Bordas mais arredondadas para suavizar */
+  border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 1em;
   color: #333;
-  transition: all 0.3s ease; /* Adiciona uma transição suave para efeitos */
+  transition: all 0.3s ease;
 }
 
 li:hover {
-  background: #d1e3f5; /* Efeito de hover com uma cor levemente mais intensa */
+  background: #d1e3f5;
 }
 
 button {
-  background: #6c5ce7; /* Cor mais suave e moderna */
+  background: #6c5ce7;
   border: none;
   color: white;
   padding: 8px 15px;
@@ -57,7 +57,7 @@ button {
 }
 
 button:hover {
-  background: #5a4cc1; /* Cor mais intensa no hover */
+  background: #5a4cc1;
 }
 
 input[type="text"] {
@@ -71,7 +71,7 @@ input[type="text"] {
 }
 
 input[type="text"]:focus {
-  border: 1px solid #6c5ce7; /* Borda roxa ao focar no input */
+  border: 1px solid #6c5ce7;
   outline: none;
 }
 
@@ -84,5 +84,5 @@ input[type="text"]:focus {
 }
 
 .center-content button {
-  font-size: 1.1em; /* Ajustando o tamanho do botão para os elementos do centro */
+  font-size: 1.1em;
 }
