@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Semestral_ToDo.iml" filepath="$PROJECT_DIR$/.idea/Semestral_ToDo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gerenciador-tarefas.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gerenciador-tarefas.main.iml" />
     </modules>
   </component>
 </project>
