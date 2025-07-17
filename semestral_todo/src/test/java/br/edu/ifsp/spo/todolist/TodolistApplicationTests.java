@@ -1,10 +1,10 @@
-package com.example.semestral_todo;
+package br.edu.ifsp.spo.todolist;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SemestralTodoApplicationTests {
+class TodolistApplicationTests {
 
 	@Test
 	void contextLoads() {

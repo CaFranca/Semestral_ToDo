@@ -1,13 +1,13 @@
-package com.example.semestral_todo;
+package br.edu.ifsp.spo.todolist;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SemestralTodoApplication {
+public class TodolistApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SemestralTodoApplication.class, args);
+		SpringApplication.run(TodolistApplication.class, args);
 	}
 
 }

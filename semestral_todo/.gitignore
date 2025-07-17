@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+.lsp/
+
+### SQLite Files ###
+*.db
+*.sqlite
+*.sqlite3

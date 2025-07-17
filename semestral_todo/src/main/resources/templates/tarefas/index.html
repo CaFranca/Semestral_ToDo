@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link rel="stylesheet" href="css/main.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de Tarefas</title>
+</head>
+
+<body>
+<main class="container">
+  <h1>Minha Lista</h1>
+
+  <div class="center-content" style="flex-direction: column; gap: 0.5em;">
+    <p>Versão inicial da aplicação de lista de tarefas para a disciplina SPOLBP2</p>
+    <nav style="display: flex; gap: 1em;">
+      <a th:href="@{/tarefas(filtro='todas')}"><button type="button">Todos os itens</button></a>
+      <a th:href="@{/tarefas(filtro='concluidas')}"><button type="button">Concluídos</button></a>
+      <a th:href="@{/tarefas(filtro='pendentes')}"><button type="button">Pendentes</button></a>
+    </nav>
+  </div>
+
+  <form th:action="@{/tarefas}" th:object="${tarefaForm}" method="post" style="margin-top: 1em;">
+    <input type="text" th:field="*{texto}" placeholder="Adicione aqui sua nova tarefa" />
+    <button type="submit">Adicionar</button>
+  </form>
+
+  <ul id="todo-list" style="margin-top: 1em;">
+    <li th:each="tarefa : ${tarefas}" th:switch="${tarefa.isConcluida()}">
+      <div th:case="${true}" style="display: flex; justify-content: space-between; align-items: center; margin: 0.5em 0;">
+        <span th:text="${tarefa.texto}" style="text-decoration: line-through;"></span>
+        <a th:href="@{/tarefas/{id}/marcar-como-nao-concluida(id=${tarefa.id})}">
+          <button type="button">Desmarcar</button>
+        </a>
+      </div>
+      <div th:case="${false}" style="display: flex; justify-content: space-between; align-items: center; margin: 0.5em 0;">
+        <span th:text="${tarefa.texto}"></span>
+        <a th:href="@{/tarefas/{id}/marcar-como-concluida(id=${tarefa.id})}">
+          <button type="button">Concluir</button>
+        </a>
+      </div>
+    </li>
+  </ul>
+
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLNKC9nD9aUcEMS3Nv1UUMiCnD-qphBAYujQ&s"
+       alt="Imagem decorativa" style="display: block; margin: 1em auto; max-width: 100%; height: auto;">
+</main>
+</body>
+</html>
