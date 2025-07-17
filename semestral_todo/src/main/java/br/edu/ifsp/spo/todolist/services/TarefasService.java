@@ -1,10 +1,12 @@
 package br.edu.ifsp.spo.todolist.services;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
 import br.edu.ifsp.spo.todolist.models.Tarefa;
+import br.edu.ifsp.spo.todolist.models.Tarefa.Status;
 import br.edu.ifsp.spo.todolist.repositories.TarefasRepository;
 
 @Service
@@ -12,22 +14,16 @@ public class TarefasService {
 
     private final TarefasRepository tarefasRepository;
 
-    //Aqui temos um exemplo de injeção de dependência, onde o repositório é injetado no serviço
-    //Isso permite que o serviço utilize os métodos do repositório para realizar operações no banco
-    //de dados, como buscar, salvar, atualizar e excluir tarefas.
-    //O Spring irá gerenciar a criação e a injeção do repositório automaticamente
     public TarefasService(TarefasRepository tarefasRepository) {
         this.tarefasRepository = tarefasRepository;
     }
 
     public List<Tarefa> listar(String filtro) {
         return switch (filtro.toLowerCase()) {
-            case "pendentes" ->
-                this.tarefasRepository.findByConcluida(false);
-            case "concluidas" -> 
-                this.tarefasRepository.findByConcluida(true);
-            default -> 
-                this.tarefasRepository.findAll();
+            case "pendentes" -> this.tarefasRepository.findByStatus(Status.PENDENTE);
+            case "fazendo" -> this.tarefasRepository.findByStatus(Status.FAZENDO);
+            case "concluidas" -> this.tarefasRepository.findByStatus(Status.CONCLUIDA);
+            default -> this.tarefasRepository.findAll();
         };
     }
 
@@ -35,29 +31,18 @@ public class TarefasService {
         return this.tarefasRepository.findAll();
     }
 
-    public void adicionarNovaTarefa(String texto) {
-        var novaTarefa = Tarefa.construirCom(texto, false);
-
+    // Novo método para adicionar com todos os campos
+    public void adicionarNovaTarefa(String texto, java.time.LocalDate dataVencimento, Status status, Set<String> tags) {
+        var novaTarefa = Tarefa.construirCom(texto, status, dataVencimento, tags);
         this.tarefasRepository.save(novaTarefa);
     }
 
-    public void marcarComoConcluida(long id) {
-        var tarefaASerAlterada = this.tarefasRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Tarefa não encontrada"));
+    // Método genérico para alterar status
+    public void alterarStatus(Long id, Status novoStatus) {
+        var tarefa = this.tarefasRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tarefa não encontrada"));
 
-        if(!tarefaASerAlterada.isConcluida()){
-            tarefaASerAlterada.alterarStatus();
-            this.tarefasRepository.save(tarefaASerAlterada);
-        }
-    }
-
-    public void marcarComoNaoConcluida(long id) {
-        var tarefaASerAlterada = this.tarefasRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Tarefa não encontrada"));
-
-        if(tarefaASerAlterada.isConcluida()) {
-            tarefaASerAlterada.alterarStatus();
-            this.tarefasRepository.save(tarefaASerAlterada);
-        }           
+        tarefa.alterarStatus(novoStatus);
+        this.tarefasRepository.save(tarefa);
     }
 }
