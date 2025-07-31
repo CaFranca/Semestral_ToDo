@@ -25,7 +25,7 @@ Desenvolvido como projeto semestral da disciplina de Programação para Web.
 ## ⚙️ Configuração Inicial
 
 1. **Pré-requisitos**
-   - Java 17 ou superior
+   - Java 21
    - Maven 3.9+ ou Gradle (dependendo do gerador usado)
    - IDE de sua preferência (IntelliJ IDEA, VS Code ou Eclipse)
 
