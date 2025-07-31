@@ -1,11 +1,11 @@
-# 📌 Semestral_ToDo
+#  Semestral_ToDo
 
 Aplicação para gerenciamento de tarefas, inspirada em referências como Todoist, Microsoft Todos, Apple Lembretes e TickTick.  
 Desenvolvido como projeto semestral da disciplina de Programação para Web.
 
 ---
 
-## 👥 Integrantes da Equipe
+##  Integrantes da Equipe
 
 | Nome completo                        | Matrícula  | GitHub Profile                      |
 | ------------------------------------- | ---------- | ----------------------------------- |
@@ -16,13 +16,13 @@ Desenvolvido como projeto semestral da disciplina de Programação para Web.
 
 ---
 
-## 🔗 Repositório
+##  Repositório
 
 [https://github.com/CaFranca/Semestral_ToDo.git](https://github.com/CaFranca/Semestral_ToDo.git)
 
 ---
 
-## ⚙️ Configuração Inicial
+##  Configuração Inicial
 
 1. **Pré-requisitos**
    - Java 21
