@@ -1,15 +1,16 @@
 package br.edu.ifsp.spo.todolist.controllers;
 
-import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.Arrays;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import br.edu.ifsp.spo.todolist.models.Tarefa.Status;
+import br.edu.ifsp.spo.todolist.models.User;
 import br.edu.ifsp.spo.todolist.services.TarefasService;
 import br.edu.ifsp.spo.todolist.forms.TarefaForm;
 
@@ -24,20 +25,26 @@ public class TarefasController {
     }
 
     @GetMapping("")
-    public String index(Model model, @RequestParam(required = false, defaultValue = "todas") String filtro) {
-        var tarefas = service.listar(filtro);
+    public String index(
+            Model model,
+            @RequestParam(required = false, defaultValue = "todas") String filtro,
+            @AuthenticationPrincipal User usuarioLogado
+    ) {
+        var tarefas = service.listar(filtro, usuarioLogado);
         model.addAttribute("tarefas", tarefas);
-        model.addAttribute("tarefaForm", new TarefaForm()); // importante para o formulário
+        model.addAttribute("tarefaForm", new TarefaForm());
         return "tarefas/index.html";
     }
 
     @PostMapping("")
-    public String create(@ModelAttribute TarefaForm tarefaForm) {
+    public String create(
+            @ModelAttribute TarefaForm tarefaForm,
+            @AuthenticationPrincipal User usuarioLogado
+    ) {
         if (tarefaForm.getTexto() == null || tarefaForm.getTexto().isBlank()) {
             return "redirect:/tarefas";
         }
 
-        // Converter tagsString em Set<String>
         Set<String> tags = Set.of();
         if (tarefaForm.getTagsString() != null && !tarefaForm.getTagsString().isBlank()) {
             tags = Arrays.stream(tarefaForm.getTagsString().split(","))
@@ -46,25 +53,28 @@ public class TarefasController {
                     .collect(Collectors.toSet());
         }
 
-        // Usa o status recebido ou PENDENTE por padrão
         service.adicionarNovaTarefa(
                 tarefaForm.getTexto(),
                 tarefaForm.getDataVencimento(),
                 tarefaForm.getStatus() != null ? tarefaForm.getStatus() : Status.PENDENTE,
-                tags
+                tags,
+                usuarioLogado // agora vinculando ao usuário
         );
 
         return "redirect:/tarefas";
     }
 
-    // Marcar uma tarefa com qualquer status válido: PENDENTE, FAZENDO, CONCLUIDA
     @GetMapping("/{id}/marcar-como/{status}")
-    public String marcarComo(@PathVariable Long id, @PathVariable String status) {
+    public String marcarComo(
+            @PathVariable Long id,
+            @PathVariable String status,
+            @AuthenticationPrincipal User usuarioLogado
+    ) {
         try {
             Status novoStatus = Status.valueOf(status.toUpperCase());
-            service.alterarStatus(id, novoStatus);
+            service.alterarStatus(id, novoStatus, usuarioLogado);
         } catch (IllegalArgumentException e) {
-            // Status inválido, pode logar ou ignorar
+            // status inválido
         }
         return "redirect:/tarefas";
     }
