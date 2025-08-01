@@ -12,7 +12,7 @@ java {
 		// Define a versão do Java a ser usada no projeto
 		languageVersion = JavaLanguageVersion.of(21)
 	}
-}
+
 
 repositories {
 	// Repositório Maven Central, onde as dependências do projeto serão buscadas
@@ -76,4 +76,5 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
 }
