@@ -32,6 +32,16 @@ public class Tarefa {
     @Column(name = "tag")
     private Set<String> tags = new HashSet<>();
 
+    @ManyToOne(optional = false)  // indica que não pode ser nulo
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    // getter e setter
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+
+
+
     public Tarefa() {
         this.status = Status.PENDENTE;  // status padrão
     }

@@ -48,6 +48,9 @@ dependencies {
 	// Driver JDBC para permitir a conexão com o banco de dados SQLite
 	implementation("org.xerial:sqlite-jdbc:3.50.2.0")
 
+	implementation("org.springframework.boot:spring-boot-starter-security")
+
+
 	// Dependencia que fornece ferramentas de desenvolvimento para o Spring Boot
 	// Esta dependência inclui o Spring Boot DevTools, que oferece recursos como recarga automática
 	// de classes, reinicialização rápida da aplicação, e outras funcionalidades que facilitam o

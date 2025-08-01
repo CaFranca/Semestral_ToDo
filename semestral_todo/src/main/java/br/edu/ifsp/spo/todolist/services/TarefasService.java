@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.edu.ifsp.spo.todolist.models.Tarefa;
 import br.edu.ifsp.spo.todolist.models.Tarefa.Status;
+import br.edu.ifsp.spo.todolist.models.User;
 import br.edu.ifsp.spo.todolist.repositories.TarefasRepository;
 
 @Service
@@ -18,31 +19,47 @@ public class TarefasService {
         this.tarefasRepository = tarefasRepository;
     }
 
-    public List<Tarefa> listar(String filtro) {
+    // Método para listar tarefas filtrando por usuário
+    public List<Tarefa> listar(String filtro, User usuario) {
+        if (usuario == null) {
+            // Opcional: pode lançar erro ou retornar lista vazia se usuário não estiver logado
+            throw new IllegalArgumentException("Usuário não autenticado");
+        }
+
         return switch (filtro.toLowerCase()) {
-            case "pendentes" -> this.tarefasRepository.findByStatus(Status.PENDENTE);
-            case "fazendo" -> this.tarefasRepository.findByStatus(Status.FAZENDO);
-            case "concluidas" -> this.tarefasRepository.findByStatus(Status.CONCLUIDA);
-            default -> this.tarefasRepository.findAll();
+            case "pendentes" -> tarefasRepository.findByUserAndStatus(usuario, Status.PENDENTE);
+            case "fazendo" -> tarefasRepository.findByUserAndStatus(usuario, Status.FAZENDO);
+            case "concluidas" -> tarefasRepository.findByUserAndStatus(usuario, Status.CONCLUIDA);
+            default -> tarefasRepository.findByUser(usuario);
         };
     }
 
-    public List<Tarefa> listarTodas() {
-        return this.tarefasRepository.findAll();
-    }
+    // Adicionar tarefa vinculando ao usuário
+    public void adicionarNovaTarefa(String texto, java.time.LocalDate dataVencimento, Status status, Set<String> tags, User usuario) {
+        if (usuario == null) {
+            throw new IllegalArgumentException("Usuário não autenticado");
+        }
 
-    // Novo método para adicionar com todos os campos
-    public void adicionarNovaTarefa(String texto, java.time.LocalDate dataVencimento, Status status, Set<String> tags) {
         var novaTarefa = Tarefa.construirCom(texto, status, dataVencimento, tags);
-        this.tarefasRepository.save(novaTarefa);
+        novaTarefa.setUser(usuario);  // importante definir o usuário!
+        tarefasRepository.save(novaTarefa);
     }
 
-    // Método genérico para alterar status
-    public void alterarStatus(Long id, Status novoStatus) {
-        var tarefa = this.tarefasRepository.findById(id)
+    // Alterar status somente se a tarefa pertencer ao usuário
+    public void alterarStatus(Long id, Status novoStatus, User usuario) {
+        if (usuario == null) {
+            throw new IllegalArgumentException("Usuário não autenticado");
+        }
+
+        var tarefa = tarefasRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Tarefa não encontrada"));
 
+        // Verifica se a tarefa pertence ao usuário
+        if (!tarefa.getUser().getId().equals(usuario.getId())) {
+            throw new IllegalArgumentException("Usuário não autorizado para alterar esta tarefa");
+        }
+
         tarefa.alterarStatus(novoStatus);
-        this.tarefasRepository.save(tarefa);
+        tarefasRepository.save(tarefa);
     }
 }
