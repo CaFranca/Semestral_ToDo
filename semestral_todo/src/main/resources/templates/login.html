@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <link rel="stylesheet" href="css/main.css" />
+</head>
+
+<body>
+    <main class="main-container">
+        <section class="task-app-container">
+            <h1 class="app-title">Login</h1>
+
+            <form th:action="@{/login}" method="post" class="task-form">
+                <div class="task-input-group">
+                    <label for="username">Email:</label>
+                    <input type="text" id="username" name="username" placeholder="Email ou nome de usuário" required />
+                </div>
+
+                <div class="task-input-group" style="margin-top: 10px;">
+                    <label for="password">Senha:</label>
+                    <input type="password" id="password" name="password" placeholder="Sua senha" required />
+                </div>
+
+                <button type="submit" class="add-button" style="margin-top: 20px; width: 100%;">Entrar</button>
+            </form>
+
+            <p style="margin-top: 15px; text-align: center;">
+                Não tem conta? <a th:href="@{/register}">Registre-se aqui</a>.
+            </p>
+        </section>
+    </main>
+</body>
+
+</html>
