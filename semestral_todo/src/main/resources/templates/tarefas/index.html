@@ -2,108 +2,120 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lista de Tarefas</title>
-  <link rel="stylesheet" href="css/main.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Tarefas</title>
+    <link rel="stylesheet" href="css/main.css" />
 </head>
 
 <body>
-  <div class="main-container">
+<div class="main-container">
     <div class="task-app-container">
 
+        <!-- Botão de logout -->
+        <form th:action="@{/logout}" method="post" style="text-align: right; margin-bottom: 10px;">
+            <button type="submit" style="padding: 6px 12px; cursor: pointer;">Sair</button>
+        </form>
 
-      <form th:action="@{/logout}" method="post" style="text-align: right; margin-bottom: 10px;">
-        <button type="submit" style="padding: 6px 12px; cursor: pointer;">Sair</button>
-      </form>
+        <p class="app-title">Versão inicial da aplicação de lista de tarefas para a disciplina SPOLBP2</p>
 
-      <p class="app-title">Versão inicial da aplicação de lista de tarefas para a disciplina SPOLBP2</p>
-
-      <div class="filter-buttons">
-        <a th:href="@{/tarefas(filtro='todas')}">
-          <button type="button" th:classappend="${#strings.equals(param.filtro, 'todas')} ? 'active' : ''">Todos os
-            itens</button>
-        </a>
-        <a th:href="@{/tarefas(filtro='concluidas')}">
-          <button type="button"
-            th:classappend="${#strings.equals(param.filtro, 'concluidas')} ? 'active' : ''">Concluídos</button>
-        </a>
-        <a th:href="@{/tarefas(filtro='pendentes')}">
-          <button type="button"
-            th:classappend="${#strings.equals(param.filtro, 'pendentes')} ? 'active' : ''">Pendentes</button>
-        </a>
-        <a th:href="@{/tarefas(filtro='fazendo')}">
-          <button type="button"
-            th:classappend="${#strings.equals(param.filtro, 'fazendo')} ? 'active' : ''">Fazendo</button>
-        </a>
-      </div>
-
-      <form class="task-form" th:action="@{/tarefas}" th:object="${tarefaForm}" method="post">
-        <input type="text" th:field="*{texto}" placeholder="Adicione aqui sua nova tarefa" required />
-
-        <div class="task-input-group">
-          <div>
-            <label>Data de Vencimento:</label>
-            <input type="date" th:field="*{dataVencimento}" />
-          </div>
-          <div>
+        <!-- Formulário de filtros -->
+        <form th:action="@{/tarefas}" method="get" class="filter-form" style="margin-bottom: 1em;">
             <label>Status:</label>
-            <select th:field="*{status}">
-              <option th:value="PENDENTE" th:text="'Pendente'"></option>
-              <option th:value="FAZENDO" th:text="'Fazendo'"></option>
-              <option th:value="CONCLUIDA" th:text="'Concluída'"></option>
+            <select name="filtroStatus">
+                <option value="todas" th:selected="${filtroStatus=='todas'}">Todos</option>
+                <option value="pendentes" th:selected="${filtroStatus=='pendentes'}">Pendentes</option>
+                <option value="fazendo" th:selected="${filtroStatus=='fazendo'}">Fazendo</option>
+                <option value="concluidas" th:selected="${filtroStatus=='concluidas'}">Concluídas</option>
             </select>
-          </div>
-          <div>
-            <label>Tags (separadas por vírgula):</label>
-            <input type="text" th:field="*{tagsString}" placeholder="ex: trabalho, urgente, pessoal" />
-          </div>
-        </div>
-        <button class="add-button" type="submit">Adicionar</button>
-      </form>
 
+            <label>Tag:</label>
+            <!-- Input com autocomplete via datalist -->
+            <input list="tagsExistentes" name="tag" th:value="${tag}" placeholder="ex: trabalho, urgente" />
+            <datalist id="tagsExistentes">
+                <option th:each="t : ${tagsExistentes}" th:value="${t}"></option>
+            </datalist>
 
-      <ul class="task-list">
-        <li th:each="tarefa : ${tarefas}" th:classappend="${tarefa.vencida} ? 'vencida' : ''" class="task-item">
-          <div class="task-info">
-            <span class="task-title" th:text="${tarefa.texto}"
-              th:style="${tarefa.status.name() == 'CONCLUIDA'} ? 'text-decoration: line-through;' : ''"></span>
-            <p class="task-details">
-              Status: <span th:text="${tarefa.status.name()}"></span> |
-              Vence em:
-              <span
-                th:text="${tarefa.dataVencimento != null} ? ${#dates.format(tarefa.dataVencimento, 'dd/MM/yyyy')} : 'Sem data'"></span>
-              |
-              Tags:
-              <span
-                th:text="${tarefa.tags != null} ? ${#strings.arrayJoin(tarefa.tags.toArray(), ', ')} : 'Nenhuma'"></span>
-            </p>
-          </div>
+            <label>Data Início:</label>
+            <input type="date" name="dataInicio" th:value="${dataInicio}" />
 
-          <div>
-            <a th:if="${tarefa.status.name() != 'CONCLUIDA'}"
-              th:href="@{/tarefas/{id}/marcar-como/CONCLUIDA(id=${tarefa.id})}">
-              <button type="button">Concluir</button>
-            </a>
-            <a th:if="${tarefa.status.name() == 'CONCLUIDA'}"
-              th:href="@{/tarefas/{id}/marcar-como/PENDENTE(id=${tarefa.id})}">
-              <button type="button">Desmarcar</button>
-            </a>
-          </div>
-        </li>
-      </ul>
+            <label>Data Fim:</label>
+            <input type="date" name="dataFim" th:value="${dataFim}" />
 
-      <style>
-        .vencida {
-          background-color: #f8d7da;
-          border-left: 5px solid #dc3545;
-        }
-      </style>
+            <label>Ordem:</label>
+            <select name="ordem">
+                <option value="asc" th:selected="${ordem=='asc'}">ID Ascendente</option>
+                <option value="desc" th:selected="${ordem=='desc'}">ID Descendente</option>
+            </select>
 
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLNKC9nD9aUcEMS3Nv1UUMiCnD-qphBAYujQ&s"
-        alt="Imagem decorativa" style="display: block; margin: 1em auto; max-width: 100%; height: auto;">
+            <button type="submit">Filtrar</button>
+        </form>
+
+        <!-- Formulário para adicionar tarefa -->
+        <form class="task-form" th:action="@{/tarefas}" th:object="${tarefaForm}" method="post">
+            <input type="text" th:field="*{texto}" placeholder="Adicione aqui sua nova tarefa" required />
+
+            <div class="task-input-group">
+                <div>
+                    <label>Data de Vencimento:</label>
+                    <input type="date" th:field="*{dataVencimento}" />
+                </div>
+                <div>
+                    <label>Status:</label>
+                    <select th:field="*{status}">
+                        <option th:value="PENDENTE" th:text="'Pendente'"></option>
+                        <option th:value="FAZENDO" th:text="'Fazendo'"></option>
+                        <option th:value="CONCLUIDA" th:text="'Concluída'"></option>
+                    </select>
+                </div>
+                <div>
+                    <label>Tags (separadas por vírgula):</label>
+                    <input type="text" th:field="*{tagsString}" placeholder="ex: trabalho, urgente, pessoal" />
+                </div>
+            </div>
+            <button class="add-button" type="submit">Adicionar</button>
+        </form>
+
+        <!-- Lista de tarefas -->
+        <ul class="task-list">
+            <li th:each="tarefa : ${tarefas}" th:classappend="${tarefa.vencida} ? 'vencida' : ''" class="task-item">
+                <div class="task-info">
+                    <span class="task-title" th:text="${tarefa.texto}"
+                          th:style="${tarefa.status.name() == 'CONCLUIDA'} ? 'text-decoration: line-through;' : ''"></span>
+                    <p class="task-details">
+                        Status: <span th:text="${tarefa.status.name()}"></span> |
+                        Vence em:
+                        <span th:text="${tarefa.dataVencimento != null} ? ${#dates.format(tarefa.dataVencimento, 'dd/MM/yyyy')} : 'Sem data'"></span>
+                        |
+                        Tags:
+                        <span th:text="${tarefa.tags != null} ? ${#strings.arrayJoin(tarefa.tags.toArray(), ', ')} : 'Nenhuma'"></span>
+                    </p>
+                </div>
+
+                <div>
+                    <a th:if="${tarefa.status.name() != 'CONCLUIDA'}"
+                       th:href="@{/tarefas/{id}/marcar-como/CONCLUIDA(id=${tarefa.id})}">
+                        <button type="button">Concluir</button>
+                    </a>
+                    <a th:if="${tarefa.status.name() == 'CONCLUIDA'}"
+                       th:href="@{/tarefas/{id}/marcar-como/PENDENTE(id=${tarefa.id})}">
+                        <button type="button">Desmarcar</button>
+                    </a>
+                </div>
+            </li>
+        </ul>
+
+        <style>
+            .vencida {
+              background-color: #f8d7da;
+              border-left: 5px solid #dc3545;
+            }
+        </style>
+
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLNKC9nD9aUcEMS3Nv1UUMiCnD-qphBAYujQ&s"
+             alt="Imagem decorativa" style="display: block; margin: 1em auto; max-width: 100%; height: auto;">
     </div>
-  </div>
+</div>
 </body>
 
 </html>
