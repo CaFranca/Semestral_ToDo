@@ -3,34 +3,54 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
     <link rel="stylesheet" href="css/main.css" />
 </head>
 
+
 <body>
-    <main class="main-container">
-        <section class="task-app-container">
-            <h1 class="app-title">Login</h1>
+    <main class="main-container centered">
+        <section class="task-app-container small">
+            <h1 class="app-title large">Login</h1>
 
-            <form th:action="@{/login}" method="post" class="task-form">
-                <div class="task-input-group">
-                    <label for="username">Email:</label>
-                    <input type="text" id="username" name="username" placeholder="Email ou nome de usuário" required />
-                </div>
+            <!-- Error message display -->
+            <div th:if="${param.error}" class="error-message mb-3">
+                Email ou senha inválidos
+            </div>
 
-                <div class="task-input-group" style="margin-top: 10px;">
-                    <label for="password">Senha:</label>
-                    <input type="password" id="password" name="password" placeholder="Sua senha" required />
-                </div>
+            <div class="form-container p-3">
+                <form th:action="@{/login}" method="post" class="task-form">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Email:</label>
+                        <input type="text" id="username" name="username" class="form-control"
+                            placeholder="Email ou nome de usuário" required />
+                    </div>
 
-                <button type="submit" class="add-button" style="margin-top: 20px; width: 100%;">Entrar</button>
-            </form>
+                    <div class="form-group">
+                        <label for="password" class="form-label">Senha:</label>
+                        <input type="password" id="password" name="password" class="form-control"
+                            placeholder="Sua senha" required />
+                    </div>
 
-            <p style="margin-top: 15px; text-align: center;">
+                    <button type="submit" class="btn btn-primary btn-block mt-3">Entrar</button>
+                </form>
+            </div>
+
+            <p class="register-link text-center p-3">
                 Não tem conta? <a th:href="@{/register}">Registre-se aqui</a>.
             </p>
+            <button id="theme-toggle" class="btn btn-secondary">
+                <span id="theme-icon">🌙</span> Tema
+            </button>
         </section>
     </main>
+    <script th:src="@{/js/theme.js}"></script>
+
+
+
+
+
 </body>
 
 </html>

@@ -1,7 +1,9 @@
 package br.edu.ifsp.spo.todolist.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -19,33 +21,79 @@ public class TarefasService {
         this.tarefasRepository = tarefasRepository;
     }
 
-    // Método para listar tarefas filtrando por usuário
-    public List<Tarefa> listar(String filtro, User usuario) {
+    /**
+     * Lista tarefas com base em filtros combinados:
+     * - status (pendentes, fazendo, concluídas ou todas)
+     * - tag específica (opcional)
+     * - data de vencimento (opcional)
+     * - ordenação por ID (asc/desc)
+     */
+    public List<Tarefa> listar(
+            String filtroStatus,
+            String filtroTag,
+            LocalDate dataInicio,
+            LocalDate dataFim,
+            String ordem,
+            User usuario
+    ) {
         if (usuario == null) {
-            // Opcional: pode lançar erro ou retornar lista vazia se usuário não estiver logado
             throw new IllegalArgumentException("Usuário não autenticado");
         }
 
-        return switch (filtro.toLowerCase()) {
-            case "pendentes" -> tarefasRepository.findByUserAndStatus(usuario, Status.PENDENTE);
-            case "fazendo" -> tarefasRepository.findByUserAndStatus(usuario, Status.FAZENDO);
-            case "concluidas" -> tarefasRepository.findByUserAndStatus(usuario, Status.CONCLUIDA);
-            default -> tarefasRepository.findByUser(usuario);
-        };
+        Status statusEnum = null;
+        if (filtroStatus != null && !filtroStatus.isBlank() && !filtroStatus.equalsIgnoreCase("todas")) {
+            // Convert "concluidas" to "concluida" before enum conversion
+            if ("concluidas".equalsIgnoreCase(filtroStatus)) {
+                filtroStatus = "concluida";
+            }
+            statusEnum = Status.valueOf(filtroStatus.toUpperCase());
+        }
+
+
+
+// Busca simples (sem tag e sem datas)
+     if ((filtroTag == null || filtroTag.isBlank()) && dataInicio == null && dataFim == null) {
+         if (statusEnum != null) {
+             return switch (statusEnum) {
+                 case PENDENTE -> ordenar(tarefasRepository.findByUserAndStatus(usuario, Status.PENDENTE), ordem);
+                 case FAZENDO -> ordenar(tarefasRepository.findByUserAndStatus(usuario, Status.FAZENDO), ordem);
+                 case CONCLUIDA -> ordenar(tarefasRepository.findByUserAndStatus(usuario, Status.CONCLUIDA), ordem);
+             };
+         } else {
+             return ordenar(tarefasRepository.findByUser(usuario), ordem);
+         }
+     }
+
+// Busca avançada com intervalo de datas
+     return ordenar(
+             tarefasRepository.filtrarTarefas(
+                     usuario,
+                     statusEnum,
+                     filtroTag,
+                     dataInicio,
+                     dataFim
+             ),
+             ordem
+     );
+
     }
 
-    // Adicionar tarefa vinculando ao usuário
-    public void adicionarNovaTarefa(String texto, java.time.LocalDate dataVencimento, Status status, Set<String> tags, User usuario) {
+    /**
+     * Adiciona nova tarefa vinculada ao usuário
+     */
+    public void adicionarNovaTarefa(String texto, LocalDate dataVencimento, Status status, Set<String> tags, User usuario) {
         if (usuario == null) {
             throw new IllegalArgumentException("Usuário não autenticado");
         }
 
         var novaTarefa = Tarefa.construirCom(texto, status, dataVencimento, tags);
-        novaTarefa.setUser(usuario);  // importante definir o usuário!
+        novaTarefa.setUser(usuario);
         tarefasRepository.save(novaTarefa);
     }
 
-    // Alterar status somente se a tarefa pertencer ao usuário
+    /**
+     * Alterar status somente se a tarefa pertencer ao usuário
+     */
     public void alterarStatus(Long id, Status novoStatus, User usuario) {
         if (usuario == null) {
             throw new IllegalArgumentException("Usuário não autenticado");
@@ -54,7 +102,6 @@ public class TarefasService {
         var tarefa = tarefasRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Tarefa não encontrada"));
 
-        // Verifica se a tarefa pertence ao usuário
         if (!tarefa.getUser().getId().equals(usuario.getId())) {
             throw new IllegalArgumentException("Usuário não autorizado para alterar esta tarefa");
         }
@@ -62,4 +109,21 @@ public class TarefasService {
         tarefa.alterarStatus(novoStatus);
         tarefasRepository.save(tarefa);
     }
+
+    /**
+     * Aplica ordenação por ID
+     */
+    private List<Tarefa> ordenar(List<Tarefa> tarefas, String ordem) {
+        if ("desc".equalsIgnoreCase(ordem)) {
+            tarefas.sort((a, b) -> b.getId().compareTo(a.getId()));
+        } else {
+            tarefas.sort((a, b) -> a.getId().compareTo(b.getId()));
+        }
+        return tarefas;
+    }
+
+    public Set<String> listarTagsExistentes(){
+        return tarefasRepository.findAll().stream().flatMap(t -> t.getTags().stream()).collect(Collectors.toSet());
+    }
+
 }

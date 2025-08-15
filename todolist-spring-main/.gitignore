@@ -1,0 +1,51 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+todolist-spring-main/.gitattributes
+todolist-spring-main/build.gradle.kts
+todolist-spring-main/gradle/wrapper/gradle-wrapper.jar
+todolist-spring-main/gradle/wrapper/gradle-wrapper.properties
+todolist-spring-main/gradlew
+todolist-spring-main/gradlew.bat
+todolist-spring-main/settings.gradle.kts
+todolist-spring-main/src/main/java/br/edu/ifsp/spo/todolist/controllers/Homecontroller.java
+todolist-spring-main/src/main/java/br/edu/ifsp/spo/todolist/controllers/TarefasController.java
+todolist-spring-main/src/main/java/br/edu/ifsp/spo/todolist/TodolistApplication.java
+todolist-spring-main/src/main/resources/application.properties
+todolist-spring-main/src/main/resources/static/css/main.css
+todolist-spring-main/src/main/resources/templates/tarefas/index.html
+todolist-spring-main/src/test/java/br/edu/ifsp/spo/todolist/TodolistApplicationTests.java
