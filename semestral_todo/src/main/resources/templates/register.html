@@ -2,42 +2,51 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8" />
-  <title>Registro de Usuário</title>
-  <link rel="stylesheet" href="css/main.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro de Usuário</title>
+    <link rel="stylesheet" href="css/main.css" />
 </head>
 
+
 <body>
-  <main class="main-container">
-    <section class="task-app-container">
-      <h1 class="app-title">Registrar novo usuário</h1>
+    <main class="main-container centered">
+        <section class="task-app-container small">
+            <h1 class="app-title large">Registrar novo usuário</h1>
 
-      <form th:action="@{/register}" th:object="${user}" method="post" class="task-form">
-        <div class="task-input-group">
-          <label for="name">Nome:</label>
-          <input type="text" id="name" th:field="*{name}" placeholder="Seu nome" required />
-        </div>
+            <div class="form-container p-3">
+                <form th:action="@{/register}" th:object="${user}" method="post" class="task-form">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Nome:</label>
+                        <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Seu nome"
+                            required />
+                    </div>
 
-        <div class="task-input-group" style="margin-top: 10px;">
-          <label for="email">Email:</label>
-          <input type="email" id="email" th:field="*{email}" placeholder="Seu email" required />
-        </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="Seu email"
+                            required />
+                    </div>
 
-        <div class="task-input-group" style="margin-top: 10px;">
-          <label for="password">Senha:</label>
-          <input type="password" id="password" name="password" placeholder="Sua senha" required />
+                    <div class="form-group">
+                        <label for="password" class="form-label">Senha:</label>
+                        <input type="password" id="password" name="password" class="form-control"
+                            placeholder="Sua senha" required />
+                    </div>
 
-        </div>
+                    <button type="submit" class="btn btn-primary btn-block mt-3">Registrar</button>
+                </form>
+            </div>
 
-
-        <button type="submit" class="add-button" style="margin-top: 20px; width: 100%;">Registrar</button>
-      </form>
-
-      <p style="margin-top: 15px; text-align: center;">
-        Já tem conta? <a th:href="@{/login}">Faça login aqui</a>.
-      </p>
-    </section>
-  </main>
+            <p class="login-link text-center p-3">
+                Já tem conta? <a th:href="@{/login}">Faça login aqui</a>.
+            </p>
+            <button id="theme-toggle" class="btn btn-secondary">
+                <span id="theme-icon">🌙</span> Tema
+            </button>
+        </section>
+    </main>
+    <script th:src="@{/js/theme.js}"></script>
 </body>
 
 </html>

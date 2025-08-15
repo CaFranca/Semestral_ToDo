@@ -35,17 +35,21 @@ public class TarefasService {
             LocalDate dataFim,
             String ordem,
             User usuario
-    )
- {
+    ) {
         if (usuario == null) {
             throw new IllegalArgumentException("Usuário não autenticado");
         }
 
-        // Converte a string de status para o enum Status ou null
-     Status statusEnum = null;
-     if (filtroStatus != null && !filtroStatus.isBlank() && !filtroStatus.equalsIgnoreCase("todas")) {
-         statusEnum = Status.valueOf(filtroStatus.toUpperCase());
-     }
+        Status statusEnum = null;
+        if (filtroStatus != null && !filtroStatus.isBlank() && !filtroStatus.equalsIgnoreCase("todas")) {
+            // Convert "concluidas" to "concluida" before enum conversion
+            if ("concluidas".equalsIgnoreCase(filtroStatus)) {
+                filtroStatus = "concluida";
+            }
+            statusEnum = Status.valueOf(filtroStatus.toUpperCase());
+        }
+
+
 
 // Busca simples (sem tag e sem datas)
      if ((filtroTag == null || filtroTag.isBlank()) && dataInicio == null && dataFim == null) {

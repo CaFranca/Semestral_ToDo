@@ -8,114 +8,142 @@
     <link rel="stylesheet" href="css/main.css" />
 </head>
 
+
+
 <body>
-<div class="main-container">
-    <div class="task-app-container">
+    <div class="main-container">
+        <div class="task-app-container large">
+            <!-- Botão de logout -->
 
-        <!-- Botão de logout -->
-        <form th:action="@{/logout}" method="post" style="text-align: right; margin-bottom: 10px;">
-            <button type="submit" style="padding: 6px 12px; cursor: pointer;">Sair</button>
-        </form>
 
-        <p class="app-title">Versão inicial da aplicação de lista de tarefas para a disciplina SPOLBP2</p>
+            <h1 class="app-title medium">Lista de Tarefas</h1>
+            <p class="text-center mb-3">Versão inicial da aplicação para a disciplina SPOLBP2</p>
+            <button id="theme-toggle" class="btn btn-secondary">
+                <span id="theme-icon">🌙</span> Tema
+            </button>
 
-        <!-- Formulário de filtros -->
-        <form th:action="@{/tarefas}" method="get" class="filter-form" style="margin-bottom: 1em;">
-            <label>Status:</label>
-            <select name="filtroStatus">
-                <option value="todas" th:selected="${filtroStatus=='todas'}">Todos</option>
-                <option value="pendentes" th:selected="${filtroStatus=='pendentes'}">Pendentes</option>
-                <option value="fazendo" th:selected="${filtroStatus=='fazendo'}">Fazendo</option>
-                <option value="concluidas" th:selected="${filtroStatus=='concluidas'}">Concluídas</option>
-            </select>
+            <!-- Formulário de filtros -->
+            <div class="form-container p-3 mb-3">
+                <form th:action="@{/tarefas}" method="get" class="filter-form">
+                    <div class="form-group">
+                        <label class="form-label">Status:</label>
+                        <select name="filtroStatus" class="form-control">
+                            <option value="todas" th:selected="${filtroStatus=='todas'}">Todos</option>
+                            <option value="pendente" th:selected="${filtroStatus=='pendente'}">Pendente</option>
+                            <option value="fazendo" th:selected="${filtroStatus=='fazendo'}">Fazendo</option>
+                            <option value="concluida" th:selected="${filtroStatus=='concluida'}">Concluída</option>
+                        </select>
+                    </div>
 
-            <label>Tag:</label>
-            <!-- Input com autocomplete via datalist -->
-            <input list="tagsExistentes" name="tag" th:value="${tag}" placeholder="ex: trabalho, urgente" />
-            <datalist id="tagsExistentes">
-                <option th:each="t : ${tagsExistentes}" th:value="${t}"></option>
-            </datalist>
+                    <div class="form-group">
+                        <label class="form-label">Tag:</label>
+                        <input list="tagsExistentes" name="tag" th:value="${tag}" placeholder="ex: trabalho, urgente"
+                            class="form-control" />
+                        <datalist id="tagsExistentes">
+                            <option th:each="t : ${tagsExistentes}" th:value="${t}"></option>
+                        </datalist>
+                    </div>
 
-            <label>Data Início:</label>
-            <input type="date" name="dataInicio" th:value="${dataInicio}" />
+                    <div class="task-input-group expanded">
+                        <div class="form-group">
+                            <label class="form-label">Data Início:</label>
+                            <input type="date" name="dataInicio" th:value="${dataInicio}" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Data Fim:</label>
+                            <input type="date" name="dataFim" th:value="${dataFim}" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ordem:</label>
+                            <select name="ordem" class="form-control">
+                                <option value="asc" th:selected="${ordem=='asc'}">ID Ascendente</option>
+                                <option value="desc" th:selected="${ordem=='desc'}">ID Descendente</option>
+                            </select>
+                        </div>
+                    </div>
 
-            <label>Data Fim:</label>
-            <input type="date" name="dataFim" th:value="${dataFim}" />
-
-            <label>Ordem:</label>
-            <select name="ordem">
-                <option value="asc" th:selected="${ordem=='asc'}">ID Ascendente</option>
-                <option value="desc" th:selected="${ordem=='desc'}">ID Descendente</option>
-            </select>
-
-            <button type="submit">Filtrar</button>
-        </form>
-
-        <!-- Formulário para adicionar tarefa -->
-        <form class="task-form" th:action="@{/tarefas}" th:object="${tarefaForm}" method="post">
-            <input type="text" th:field="*{texto}" placeholder="Adicione aqui sua nova tarefa" required />
-
-            <div class="task-input-group">
-                <div>
-                    <label>Data de Vencimento:</label>
-                    <input type="date" th:field="*{dataVencimento}" />
-                </div>
-                <div>
-                    <label>Status:</label>
-                    <select th:field="*{status}">
-                        <option th:value="PENDENTE" th:text="'Pendente'"></option>
-                        <option th:value="FAZENDO" th:text="'Fazendo'"></option>
-                        <option th:value="CONCLUIDA" th:text="'Concluída'"></option>
-                    </select>
-                </div>
-                <div>
-                    <label>Tags (separadas por vírgula):</label>
-                    <input type="text" th:field="*{tagsString}" placeholder="ex: trabalho, urgente, pessoal" />
-                </div>
+                    <button type="submit" class="btn btn-primary btn-block">Filtrar</button>
+                </form>
             </div>
-            <button class="add-button" type="submit">Adicionar</button>
-        </form>
 
-        <!-- Lista de tarefas -->
-        <ul class="task-list">
-            <li th:each="tarefa : ${tarefas}" th:classappend="${tarefa.vencida} ? 'vencida' : ''" class="task-item">
-                <div class="task-info">
-                    <span class="task-title" th:text="${tarefa.texto}"
-                          th:style="${tarefa.status.name() == 'CONCLUIDA'} ? 'text-decoration: line-through;' : ''"></span>
-                    <p class="task-details">
-                        Status: <span th:text="${tarefa.status.name()}"></span> |
-                        Vence em:
-                        <span th:text="${tarefa.dataVencimento != null} ? ${#dates.format(tarefa.dataVencimento, 'dd/MM/yyyy')} : 'Sem data'"></span>
-                        |
-                        Tags:
-                        <span th:text="${tarefa.tags != null} ? ${#strings.arrayJoin(tarefa.tags.toArray(), ', ')} : 'Nenhuma'"></span>
-                    </p>
-                </div>
+            <!-- Formulário para adicionar tarefa -->
+            <div class="form-container p-3 mb-3">
+                <form th:action="@{/tarefas}" th:object="${tarefaForm}" method="post" class="task-form">
+                    <div class="form-group">
+                        <input type="text" th:field="*{texto}" class="form-control"
+                            placeholder="Adicione aqui sua nova tarefa" required />
+                    </div>
 
-                <div>
-                    <a th:if="${tarefa.status.name() != 'CONCLUIDA'}"
-                       th:href="@{/tarefas/{id}/marcar-como/CONCLUIDA(id=${tarefa.id})}">
-                        <button type="button">Concluir</button>
-                    </a>
-                    <a th:if="${tarefa.status.name() == 'CONCLUIDA'}"
-                       th:href="@{/tarefas/{id}/marcar-como/PENDENTE(id=${tarefa.id})}">
-                        <button type="button">Desmarcar</button>
-                    </a>
-                </div>
-            </li>
-        </ul>
+                    <div class="task-input-group expanded">
+                        <div class="form-group">
+                            <label class="form-label">Data de Vencimento:</label>
+                            <input type="date" th:field="*{dataVencimento}" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status:</label>
+                            <select th:field="*{status}" class="form-control">
+                                <option th:value="PENDENTE" th:text="'Pendente'"></option>
+                                <option th:value="FAZENDO" th:text="'Fazendo'"></option>
+                                <option th:value="CONCLUIDA" th:text="'Concluída'"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tags (separadas por vírgula):</label>
+                            <input type="text" th:field="*{tagsString}" class="form-control"
+                                placeholder="ex: trabalho, urgente, pessoal" />
+                        </div>
+                    </div>
 
-        <style>
-            .vencida {
-              background-color: #f8d7da;
-              border-left: 5px solid #dc3545;
-            }
-        </style>
+                    <button type="submit" class="btn btn-primary btn-block">Adicionar Tarefa</button>
+                </form>
 
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLNKC9nD9aUcEMS3Nv1UUMiCnD-qphBAYujQ&s"
-             alt="Imagem decorativa" style="display: block; margin: 1em auto; max-width: 100%; height: auto;">
+            </div>
+            <form th:action="@{/logout}" method="post" class="text-right mb-3">
+                <button type="submit" class="btn btn-danger logout-btn">Sair</button>
+            </form>
+
+            <!-- Lista de tarefas -->
+            <div class="p-3">
+                <ul class="task-list">
+                    <li th:each="tarefa : ${tarefas}"
+                        th:class="${'task-item ' + (tarefa.vencida ? 'vencida ' : '') + (tarefa.status.name() == 'CONCLUIDA' ? 'completed' : '')}">
+                        <div class="task-info">
+                            <span class="task-title" th:text="${tarefa.texto}"></span>
+                            <div class="task-details">
+                                <span class="status-badge" th:class="${tarefa.status.name() == 'PENDENTE' ? 'status-pending' :
+                                            tarefa.status.name() == 'FAZENDO' ? 'status-doing' :
+                                            'status-completed'}" th:text="${tarefa.status.name()}"></span>
+
+                                <span th:if="${tarefa.dataVencimento != null}">
+                                    Vence em: <span
+                                        th:text="${#dates.format(tarefa.dataVencimento, 'dd/MM/yyyy')}"></span>
+                                </span>
+
+                                <div th:if="${tarefa.tags != null and !tarefa.tags.empty}" class="mt-2">
+                                    <span th:each="tag : ${tarefa.tags}" class="tag" th:text="${tag}"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="task-actions">
+                            <a th:if="${tarefa.status.name() != 'CONCLUIDA'}"
+                                th:href="@{/tarefas/{id}/marcar-como/CONCLUIDA(id=${tarefa.id})}">
+                                <button type="button" class="btn btn-success">Concluir</button>
+                            </a>
+                            <a th:if="${tarefa.status.name() == 'CONCLUIDA'}"
+                                th:href="@{/tarefas/{id}/marcar-como/PENDENTE(id=${tarefa.id})}">
+                                <button type="button" class="btn btn-secondary">Desmarcar</button>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLNKC9nD9aUcEMS3Nv1UUMiCnD-qphBAYujQ&s"
+                alt="Imagem decorativa" class="decorative-img mt-3">
+        </div>
     </div>
-</div>
+    <script th:src="@{/js/theme.js}"></script>
 </body>
 
 </html>

@@ -37,6 +37,12 @@ public class TarefasController {
             @RequestParam(required = false, defaultValue = "asc") String ordem,
             @AuthenticationPrincipal User usuarioLogado
     ) {
+
+        String statusFilterForQuery = filtroStatus;
+        if ("concluidas".equals(filtroStatus)) {
+            statusFilterForQuery = "concluida"; // Convert plural to singular
+        }
+
         var tarefas = service.listar(filtroStatus, tag, dataInicio, dataFim, ordem, usuarioLogado);
 
         // Pega todas as tags existentes (não duplicadas)
@@ -91,10 +97,15 @@ public class TarefasController {
             @AuthenticationPrincipal User usuarioLogado
     ) {
         try {
-            Status novoStatus = Status.valueOf(status.toUpperCase());
+            // Handle both singular and plural forms
+            String statusValue = status;
+            if ("concluidas".equalsIgnoreCase(status)) {
+                statusValue = "concluida";
+            }
+            Status novoStatus = Status.valueOf(statusValue.toUpperCase());
             service.alterarStatus(id, novoStatus, usuarioLogado);
         } catch (IllegalArgumentException e) {
-            // status inválido
+            // Handle invalid status
         }
         return "redirect:/tarefas";
     }
