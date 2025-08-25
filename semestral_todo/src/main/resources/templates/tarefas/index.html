@@ -114,10 +114,7 @@
                                             tarefa.status.name() == 'FAZENDO' ? 'status-doing' :
                                             'status-completed'}" th:text="${tarefa.status.name()}"></span>
 
-                                <span th:if="${tarefa.dataVencimento != null}">
-                                    Vence em: <span
-                                        th:text="${#dates.format(tarefa.dataVencimento, 'dd/MM/yyyy')}"></span>
-                                </span>
+                                <span th:text="${#temporals.format(tarefa.dataVencimento, 'dd/MM/yyyy')}"></span>
 
                                 <div th:if="${tarefa.tags != null and !tarefa.tags.empty}" class="mt-2">
                                     <span th:each="tag : ${tarefa.tags}" class="tag" th:text="${tag}"></span>
