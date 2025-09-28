@@ -109,5 +109,19 @@ public class TarefasController {
         }
         return "redirect:/tarefas";
     }
+
+    @GetMapping("/{id}/deletar-tarefa")
+    public String deletarTarefa(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User usuarioLogado
+    ){
+        try {
+            service.apagarTarefa(id, usuarioLogado);
+
+        }catch (IllegalArgumentException e){
+            // Handle invalid status
+        }
+        return "redirect:/tarefas";
+    }
 }
 
