@@ -110,6 +110,21 @@ public class TarefasService {
         tarefasRepository.save(tarefa);
     }
 
+    public void apagarTarefa(Long id, User usuario) {
+        if (usuario == null) {
+            throw new IllegalArgumentException("Usuário não autenticado");
+        }
+
+        var tarefa = tarefasRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tarefa não encontrada"));
+
+        if (!tarefa.getUser().getId().equals(usuario.getId())) {
+            throw new IllegalArgumentException("Usuário não autorizado para alterar esta tarefa");
+        }
+
+        tarefasRepository.delete(tarefa);
+    }
+
     /**
      * Aplica ordenação por ID
      */

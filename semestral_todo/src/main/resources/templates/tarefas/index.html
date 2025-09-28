@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lista de Tarefas</title>
     <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 
 
@@ -19,7 +20,7 @@
             <h1 class="app-title medium">Lista de Tarefas</h1>
             <p class="text-center mb-3">Versão inicial da aplicação para a disciplina SPOLBP2</p>
             <button id="theme-toggle" class="btn btn-secondary">
-                <span id="theme-icon">🌙</span> Tema
+                <span id="theme-icon">🌙</span>
             </button>
 
             <!-- Formulário de filtros -->
@@ -126,11 +127,17 @@
                             <a th:if="${tarefa.status.name() != 'CONCLUIDA'}"
                                 th:href="@{/tarefas/{id}/marcar-como/CONCLUIDA(id=${tarefa.id})}">
                                 <button type="button" class="btn btn-success">Concluir</button>
+
                             </a>
                             <a th:if="${tarefa.status.name() == 'CONCLUIDA'}"
                                 th:href="@{/tarefas/{id}/marcar-como/PENDENTE(id=${tarefa.id})}">
                                 <button type="button" class="btn btn-secondary">Desmarcar</button>
                             </a>
+                            <a
+                               th:href="@{/tarefas/{id}/deletar-tarefa(id=${tarefa.id})}">
+                                <button type="button" class="btn btn-delete">Apagar</button>
+                            </a>
+
                         </div>
                     </li>
                 </ul>

@@ -200,11 +200,12 @@ body {
   border-color: var(--success);
 }
 
-.btn-danger {
+.btn-delete {
   color: var(--white);
   background-color: var(--danger);
   border-color: var(--danger);
 }
+
 
 .btn-secondary {
   color: var(--white);
