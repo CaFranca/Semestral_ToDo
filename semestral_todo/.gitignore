@@ -38,6 +38,6 @@ out/
 .lsp/
 
 ### SQLite Files ###
-*.db
+
 *.sqlite
 *.sqlite3
