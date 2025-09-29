@@ -208,10 +208,18 @@ body {
   border-color: var(--danger);
 }
 
+
 .btn-danger {
   color: var(--white);
   background-color: var(--danger);
   border-color: var(--danger);
+}
+
+
+.btn-edit {
+  color: var(--blue);
+  background-color: var(--blue);
+  border-color: var(--blue);
 }
 
 
