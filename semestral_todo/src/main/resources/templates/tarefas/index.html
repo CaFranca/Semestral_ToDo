@@ -137,7 +137,10 @@
                                th:href="@{/tarefas/{id}/deletar-tarefa(id=${tarefa.id})}">
                                 <button type="button" class="btn btn-delete">Apagar</button>
                             </a>
-
+                            <a
+                                    th:href="@{/tarefas/{id}/editar-tarefa(id=${tarefa.id})}">
+                                <button type="button" class="btn btn-edit">Editar</button>
+                            </a>
                         </div>
                     </li>
                 </ul>

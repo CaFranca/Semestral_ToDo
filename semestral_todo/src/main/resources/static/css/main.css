@@ -206,6 +206,11 @@ body {
   border-color: var(--danger);
 }
 
+.btn-edit {
+  color: var(--blue);
+  background-color: var(--blue);
+  border-color: var(--blue);
+}
 
 .btn-secondary {
   color: var(--white);
