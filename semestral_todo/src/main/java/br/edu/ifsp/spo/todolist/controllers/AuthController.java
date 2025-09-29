@@ -29,7 +29,21 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute User user) {
+    public String register(@ModelAttribute User user, Model model) {
+
+        // Verifica se o usuário já existe
+        if (userRepository.findByName(user.getName()).isPresent()) {
+            model.addAttribute("errorMessage", "Usuário já existente");
+            model.addAttribute("user", user);
+            return "register";
+        }
+
+        // Verifica se o e-mail já está registrado
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            model.addAttribute("errorMessage", "E-mail já registrado");
+            model.addAttribute("user", user);
+            return "register";
+        }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         System.out.println("Senha codificada: " + user.getPassword());
