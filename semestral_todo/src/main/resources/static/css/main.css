@@ -67,9 +67,11 @@ body {
    LAYOUT & CONTAINERS
    ====================== */
 .main-container {
-  width: 100%;
+  width: 90%;
   min-height: 100vh;
   padding: 2rem 1rem;
+  margin: 0 auto;
+  
 }
 
 @media (min-width: 768px) {
@@ -206,11 +208,20 @@ body {
   border-color: var(--danger);
 }
 
+
+.btn-danger {
+  color: var(--white);
+  background-color: var(--danger);
+  border-color: var(--danger);
+}
+
+
 .btn-edit {
   color: var(--blue);
   background-color: var(--blue);
   border-color: var(--blue);
 }
+
 
 .btn-secondary {
   color: var(--white);
@@ -389,4 +400,61 @@ body {
 
 .task-item {
   animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Sidebar */
+.sidebar {
+    height: 100%; /* altura total da tela */
+    width: 0; /* inicialmente escondida */
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #111; /* cor da sidebar */
+    overflow-x: hidden; /* remove scroll horizontal */
+    transition: 0.3s; /* animação de abertura */
+    padding-top: 60px;
+    z-index: 1000; /* coloca a sidebar na frente */
+}
+
+/* Links da sidebar */
+.sidebar a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #f1f1f1;
+    display: block;
+    transition: 0.2s;
+}
+
+.sidebar a:hover {
+    background-color: #575757;
+}
+
+/* Botão de fechar */
+.sidebar .closebtn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+}
+
+/* Conteúdo principal */
+#main {
+    transition: margin-left 0.3s;
+    padding: 20px;
+}
+
+/* Botão de abrir */
+#btn-open-sidebar {
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--white);
+    background-color: var(--primary);
+    border: none;
+    padding: 10px 15px;
+    margin-left: 10px;
+}
+
+.logout-btn{
+    margin: 20px
 }

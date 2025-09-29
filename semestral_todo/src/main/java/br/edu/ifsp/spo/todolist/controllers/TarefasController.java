@@ -1,9 +1,11 @@
 package br.edu.ifsp.spo.todolist.controllers;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Set;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Arrays;
+
 
 import br.edu.ifsp.spo.todolist.models.Tarefa;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -45,9 +47,18 @@ public class TarefasController {
         }
 
         var tarefas = service.listar(filtroStatus, tag, dataInicio, dataFim, ordem, usuarioLogado);
+        tarefas.sort(
+                Comparator.comparing(
+                        Tarefa::getDataVencimento,
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                )
+        );
+
+
 
         // Pega todas as tags existentes (não duplicadas)
         Set<String> tagsExistentes = service.listarTagsExistentes();
+
 
         model.addAttribute("tarefas", tarefas);
         model.addAttribute("tarefaForm", new TarefaForm());
