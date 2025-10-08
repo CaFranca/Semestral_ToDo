@@ -10,6 +10,11 @@
 </head>
 
 <body>
+
+    <div class="main-container">
+
+        <div class="task-app-container large">
+
 <div class="main-container">
     <div class="task-app-container large">
         <!-- Header with title and theme toggle -->
@@ -167,7 +172,14 @@
                                 </option>
                             </select>
                         </div>
+
                         <div class="form-group">
+                            <label class="form-label">Tag:</label>
+                            <input list="tagsExistentes" name="tag" th:value="${tag}" placeholder="ex: trabalho, urgente"
+                                   class="form-control" />
+                            <datalist id="tagsExistentes">
+                                <option th:each="t : ${tagsExistentes}" th:value="${t}"></option>
+                            </datalist>
                             <label class="form-label">
                                 <i class="bi bi-tags"></i>
                                 Tags:
@@ -179,7 +191,32 @@
                             </div>
                             <small class="form-hint">Separe por vírgula</small>
                         </div>
-                    </div>
+
+                        <div class="task-input-group expanded">
+                            <div class="form-group">
+                                <label class="form-label">Data Início:</label>
+                                <input type="date" name="dataInicio" th:value="${dataInicio}" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Data Fim:</label>
+                                <input type="date" name="dataFim" th:value="${dataFim}" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Ordem:</label>
+                                <select name="ordem" class="form-control">
+                                    <option value="asc" th:selected="${ordem=='asc'}">ID Ascendente</option>
+                                    <option value="desc" th:selected="${ordem=='desc'}">ID Descendente</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Filtrar</button>
+                    </form>
+                </div>
+            </div>
+            <button id="theme-toggle" class="btn btn-secondary">
+                <span id="theme-icon">🌙</span>
+            </button>
 
                     <button type="submit" class="btn btn-primary btn-block add-task-btn">
                         <i class="bi bi-plus-lg"></i>
@@ -252,6 +289,17 @@
 
                         <div class="task-actions">
                             <a th:if="${tarefa.status.name() != 'CONCLUIDA'}"
+                               th:href="@{/tarefas/{id}/marcar-como/CONCLUIDA(id=${tarefa.id})}">
+                                <button type="button" class="btn btn-success">Concluir</button>
+
+                            </a>
+                            <a th:if="${tarefa.status.name() == 'CONCLUIDA'}"
+                               th:href="@{/tarefas/{id}/marcar-como/PENDENTE(id=${tarefa.id})}">
+                                <button type="button" class="btn btn-secondary">Desmarcar</button>
+                            </a>
+                            <a
+                                    th:href="@{/tarefas/{id}/deletar-tarefa(id=${tarefa.id})}">
+                                <button type="button" class="btn btn-delete">Apagar</button>
                                th:href="@{/tarefas/{id}/marcar-como/CONCLUIDA(id=${tarefa.id})}"
                                class="btn-action complete-btn">
                                 <button type="button" class="btn btn-success">
@@ -280,6 +328,46 @@
             </div>
         </div>
 
+
+
+
+            <!-- Formulário para adicionar tarefa -->
+            <div class="form-container p-3 mb-3">
+                <form th:action="@{/tarefas}" th:object="${tarefaForm}" method="post" class="task-form">
+                    <div class="form-group">
+                        <input type="text" th:field="*{texto}" class="form-control"
+                            placeholder="Adicione aqui sua nova tarefa" required />
+                    </div>
+
+                    <div class="task-input-group expanded">
+                        <div class="form-group">
+                            <label class="form-label">Data de Vencimento:</label>
+                            <input type="date" th:field="*{dataVencimento}" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status:</label>
+                            <select th:field="*{status}" class="form-control">
+                                <option th:value="PENDENTE" th:text="'Pendente'"></option>
+                                <option th:value="FAZENDO" th:text="'Fazendo'"></option>
+                                <option th:value="CONCLUIDA" th:text="'Concluída'"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tags (separadas por vírgula):</label>
+                            <input type="text" th:field="*{tagsString}" class="form-control"
+                                placeholder="ex: trabalho, urgente, pessoal" />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Adicionar Tarefa</button>
+                </form>
+
+            </div>
+            <form th:action="@{/logout}" method="post" class="text-right mb-3">
+                <button type="submit" class="btn btn-danger logout-btn">Sair</button>
+            </form>
+
+
         <!-- Decorative Footer -->
         <div class="app-footer">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLNKC9nD9aUcEMS3Nv1UUMiCnD-qphBAYujQ&s"
@@ -290,6 +378,9 @@
             </p>
         </div>
     </div>
+    <script th:src="@{/js/theme.js}"></script>
+    <script th:src="@{/js/menuLateral.js}"></script>
+
 </div>
 
 <!-- Additional CSS for new HTML structure -->
