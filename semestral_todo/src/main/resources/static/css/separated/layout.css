@@ -1,0 +1,79 @@
+/* layout.css */
+/* ======================
+   LAYOUT & CONTAINERS
+   ====================== */
+.main-container {
+  width: 90%;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  overflow: visible; /* Ensure content can overflow */
+}
+
+@media (min-width: 768px) {
+  .main-container {
+    padding: 3rem 2rem;
+    align-items: center;
+  }
+}
+
+.task-app-container {
+  width: 100%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: visible; /* Changed from hidden to visible */
+  border: 1px solid var(--glass-border);
+  transition: var(--transition);
+  position: relative;
+  min-height: auto; /* Remove fixed height */
+}
+
+.task-app-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  z-index: 1;
+}
+
+.task-app-container.large {
+  max-width: 64rem;
+}
+
+.task-app-container:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--box-shadow-hover);
+}
+
+/* Task input group enhancement */
+.task-input-group.expanded {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .task-input-group.expanded {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Ensure content can grow and scroll */
+.tasks-section .p-3 {
+  overflow: visible;
+}
+
+.task-list {
+  max-height: none; /* Remove any height restrictions */
+  overflow: visible;
+}

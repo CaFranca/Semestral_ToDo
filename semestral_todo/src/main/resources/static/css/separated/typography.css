@@ -1,0 +1,40 @@
+/* typography.css */
+/* ======================
+   TYPOGRAPHY ENHANCEMENTS
+   ====================== */
+.app-title {
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  font-weight: 800;
+  text-align: center;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.app-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 2px;
+}
+
+.app-title.medium {
+  font-size: 1.75rem;
+  letter-spacing: -0.5px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .app-title.medium {
+    font-size: 1.5rem;
+  }
+}

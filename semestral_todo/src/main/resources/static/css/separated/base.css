@@ -1,0 +1,60 @@
+/* base.css */
+/* ======================
+   BASE STYLES WITH ENHANCEMENTS
+   ====================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--background);
+  min-height: 100vh;
+  transition: var(--transition-slow);
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background);
+  z-index: -1;
+}
+
+/* Focus states for accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Loading state for transitions */
+.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Print styles */
+@media print {
+  .task-app-container {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+
+  .task-actions,
+  #theme-toggle,
+  .logout-btn,
+  .decorative-img {
+    display: none;
+  }
+}

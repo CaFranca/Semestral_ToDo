@@ -1,0 +1,183 @@
+/* edit-sidebar.css */
+/* Edit Sidebar Styles */
+.edit-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Start hidden on the right */
+    width: 400px;
+    height: 100vh;
+    background: var(--surface);
+    box-shadow: var(--box-shadow);
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001; /* Higher than filter sidebar */
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.edit-sidebar.open {
+    right: 0;
+}
+
+.edit-sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--primary);
+    color: white;
+}
+
+.edit-sidebar-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.edit-sidebar-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition);
+}
+
+.edit-sidebar-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.edit-sidebar-content {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.edit-sidebar-actions {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 0.75rem;
+}
+
+.edit-sidebar-actions .btn {
+    flex: 1;
+}
+
+/* Edit overlay */
+.edit-sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+
+.edit-sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Animation for edit sidebar */
+@keyframes slideInFromRight {
+    from {
+        right: -400px;
+        opacity: 0;
+    }
+    to {
+        right: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutToRight {
+    from {
+        right: 0;
+        opacity: 1;
+    }
+    to {
+        right: -400px;
+        opacity: 0;
+    }
+}
+
+.edit-sidebar {
+    animation: slideOutToRight 0.3s ease-in-out forwards;
+}
+
+.edit-sidebar.open {
+    animation: slideInFromRight 0.3s ease-in-out forwards;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .edit-sidebar {
+        width: 90%;
+        max-width: 350px;
+        right: -100%;
+    }
+
+    .edit-sidebar.open {
+        right: 0;
+    }
+}
+
+/* Task preview in edit sidebar */
+.task-preview {
+    background: var(--light);
+    border-radius: var(--border-radius-sm);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--primary);
+}
+
+.task-preview .task-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+}
+
+.task-preview .task-details {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Form styles for edit */
+.edit-form .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.edit-form .form-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: var(--text);
+}
+
+.edit-form .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    transition: var(--transition);
+}
+
+.edit-form .form-control:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
