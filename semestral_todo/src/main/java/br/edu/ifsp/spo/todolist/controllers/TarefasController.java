@@ -135,5 +135,29 @@ public class TarefasController {
         }
         return "redirect:/tarefas";
     }
+
+    @GetMapping("/{id}/editar-tarefa")
+    public String mostrarPaginaEdicao (
+            @PathVariable Long id, Model model,
+            @AuthenticationPrincipal User usuarioLogado
+    )
+    {
+        Tarefa tarefa_edicao = service.buscarTarefaEdicao(id, usuarioLogado); // encontra a tarefa a ser editada
+        model.addAttribute("tarefa", tarefa_edicao); // faz com que as infos da tarefa vão pro html
+
+        return "EdicaoTarefas";
+    }
+
+    @PostMapping("/{id}/editar-tarefa")
+    public String salvarEdicao (
+            @PathVariable Long id,
+            @ModelAttribute Tarefa tarefa,
+            @AuthenticationPrincipal User usuarioLogado
+    )
+    {
+        service.editarTarefa(id, tarefa, usuarioLogado);
+
+        return "redirect:/tarefas";
+    }
 }
 

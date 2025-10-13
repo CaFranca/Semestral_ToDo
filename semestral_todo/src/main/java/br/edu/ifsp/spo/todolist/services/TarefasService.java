@@ -125,6 +125,32 @@ public class TarefasService {
         tarefasRepository.delete(tarefa);
     }
 
+    public Tarefa buscarTarefaEdicao(Long id, User usuario) { // acha a tarefa a ser editada
+        if (usuario == null) {
+            throw new IllegalArgumentException("Usuário não autenticado");
+        }
+
+        var tarefa = tarefasRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tarefa não encontrada"));
+
+        if (!tarefa.getUser().getId().equals(usuario.getId())) {
+            throw new IllegalArgumentException("Usuário não autorizado para alterar esta tarefa");
+        }
+
+        return tarefa;
+    }
+
+    public void editarTarefa(Long id, Tarefa dadosForm, User usuarioLogado){ // edita e salva as infos
+        Tarefa tarefa = this.buscarTarefaEdicao(id, usuarioLogado);
+
+        tarefa.setTexto(dadosForm.getTexto());
+        tarefa.setStatus(dadosForm.getStatus());
+        tarefa.setDataVencimento(dadosForm.getDataVencimento());
+        tarefa.setTags(dadosForm.getTags());
+
+        tarefasRepository.save(tarefa);
+    }
+
     /**
      * Aplica ordenação por ID
      */
