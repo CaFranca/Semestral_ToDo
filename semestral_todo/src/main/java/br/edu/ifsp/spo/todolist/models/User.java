@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -23,79 +24,86 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    // Construtor padrão (necessário para o JPA)
+    // Password reset fields
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "reset_token_expiry")
+    private LocalDateTime resetTokenExpiry;
+
+    @Column(name = "reset_key")
+    private String resetKey;
+
+    @Column(name = "reset_key_expiry")
+    private LocalDateTime resetKeyExpiry;
+
+    // Construtores, getters e setters existentes...
     public User() {}
 
-    // Construtor útil para testes ou cadastro
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    // Getters e Setters
-    public Long getId() {
-        return id;
+    // Getters e Setters para os novos campos
+    public String getResetToken() {
+        return resetToken;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
     }
 
-    public String getName() {
-        return name;
+    public LocalDateTime getResetTokenExpiry() {
+        return resetTokenExpiry;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) {
+        this.resetTokenExpiry = resetTokenExpiry;
     }
 
-    @Override
-    public String getUsername() {
-        return email; // usado para login
+    public String getResetKey() {
+        return resetKey;
     }
 
-    public String getEmail() {
-        return email;
+    public void setResetKey(String resetKey) {
+        this.resetKey = resetKey;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public LocalDateTime getResetKeyExpiry() {
+        return resetKeyExpiry;
     }
 
-    @Override
-    public String getPassword() {
-        return password;
+    public void setResetKeyExpiry(LocalDateTime resetKeyExpiry) {
+        this.resetKeyExpiry = resetKeyExpiry;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    // Implementações obrigatórias da interface UserDetails:
+    // Resto dos métodos existentes...
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    @Override public String getUsername() { return email; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    @Override public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList(); // sem roles por enquanto
+        return Collections.emptyList();
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true; // conta nunca expira
-    }
+    public boolean isAccountNonExpired() { return true; }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return true; // conta nunca é bloqueada
-    }
+    public boolean isAccountNonLocked() { return true; }
 
     @Override
-    public boolean isCredentialsNonExpired() {
-        return true; // credenciais sempre válidas
-    }
+    public boolean isCredentialsNonExpired() { return true; }
 
     @Override
-    public boolean isEnabled() {
-        return true; // usuário sempre ativo
-    }
+    public boolean isEnabled() { return true; }
 }

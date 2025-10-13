@@ -26,12 +26,17 @@ public class SecurityConfig {
                                 "/",
                                 "/login",
                                 "/register",
-                                "/css/**",           // CSS files
-                                "/js/**",             // JavaScript files (corrected path)
-                                "/images/**",         // Image files
-                                "/webjars/**",        // WebJars resources
-                                "/favicon.ico",       // Favicon
-                                "/error"              // Error page
+                                "/forgot-password",
+                                "/reset-password",
+                                "/reset-password-key",
+                                "/verify-reset-key",
+                                "/reset-password-final",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/webjars/**",
+                                "/favicon.ico",
+                                "/error"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
