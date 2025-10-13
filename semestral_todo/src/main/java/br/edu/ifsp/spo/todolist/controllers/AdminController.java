@@ -1,6 +1,6 @@
 package br.edu.ifsp.spo.todolist.controllers;
 
-import br.edu.ifsp.spo.todolist.models.Task;
+import br.edu.ifsp.spo.todolist.models.Tarefa;
 import br.edu.ifsp.spo.todolist.models.User;
 import br.edu.ifsp.spo.todolist.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,9 @@ public class AdminController {
     @GetMapping("/dashboard")
     public String adminDashboard(Model model) {
         model.addAttribute("totalUsers", adminService.getTotalUsers());
-        model.addAttribute("totalTasks", adminService.getTotalTasks());
-        model.addAttribute("completedTasks", adminService.getCompletedTasks());
+        model.addAttribute("totalTarefas", adminService.getTotalTarefas());
+        model.addAttribute("completedTarefas", adminService.getCompletedTarefas());
+        model.addAttribute("pendingTarefas", adminService.getPendingTarefas());
         model.addAttribute("adminUsers", adminService.getAdminUsersCount());
         return "admin/dashboard";
     }
@@ -71,58 +72,58 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    // Task management
-    @GetMapping("/tasks")
-    public String listTasks(Model model) {
-        List<Task> tasks = adminService.getAllTasks();
-        model.addAttribute("tasks", tasks);
-        return "admin/tasks";
+    // Tarefa management (using Tarefa instead of Task)
+    @GetMapping("/tarefas")
+    public String listTarefas(Model model) {
+        List<Tarefa> tarefas = adminService.getAllTarefas();
+        model.addAttribute("tarefas", tarefas);
+        return "admin/tarefas";
     }
 
-    @GetMapping("/tasks/edit/{id}")
-    public String editTaskForm(@PathVariable Long id, Model model) {
-        Task task = adminService.getTaskById(id).orElse(null);
-        if (task == null) {
-            return "redirect:/admin/tasks";
+    @GetMapping("/tarefas/edit/{id}")
+    public String editTarefaForm(@PathVariable Long id, Model model) {
+        Tarefa tarefa = adminService.getTarefaById(id).orElse(null);
+        if (tarefa == null) {
+            return "redirect:/admin/tarefas";
         }
-        model.addAttribute("task", task);
-        model.addAttribute("users", adminService.getAllUsers());
-        return "admin/edit-task";
+        model.addAttribute("tarefa", tarefa);
+        model.addAttribute("statusOptions", Tarefa.Status.values());
+        return "admin/edit-tarefa";
     }
 
-    @PostMapping("/tasks/update/{id}")
-    public String updateTask(@PathVariable Long id, @ModelAttribute Task task,
-                             RedirectAttributes redirectAttributes) {
-        Task updatedTask = adminService.updateTask(id, task);
-        if (updatedTask != null) {
+    @PostMapping("/tarefas/update/{id}")
+    public String updateTarefa(@PathVariable Long id, @ModelAttribute Tarefa tarefa,
+                               RedirectAttributes redirectAttributes) {
+        Tarefa updatedTarefa = adminService.updateTarefa(id, tarefa);
+        if (updatedTarefa != null) {
             redirectAttributes.addFlashAttribute("success", "Tarefa atualizada com sucesso!");
         } else {
             redirectAttributes.addFlashAttribute("error", "Erro ao atualizar tarefa.");
         }
-        return "redirect:/admin/tasks";
+        return "redirect:/admin/tarefas";
     }
 
-    @PostMapping("/tasks/delete/{id}")
-    public String deleteTask(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        boolean deleted = adminService.deleteTask(id);
+    @PostMapping("/tarefas/delete/{id}")
+    public String deleteTarefa(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        boolean deleted = adminService.deleteTarefa(id);
         if (deleted) {
             redirectAttributes.addFlashAttribute("success", "Tarefa deletada com sucesso!");
         } else {
             redirectAttributes.addFlashAttribute("error", "Erro ao deletar tarefa.");
         }
-        return "redirect:/admin/tasks";
+        return "redirect:/admin/tarefas";
     }
 
-    // User tasks view
-    @GetMapping("/users/{userId}/tasks")
-    public String viewUserTasks(@PathVariable Long userId, Model model) {
+    // User tarefas view
+    @GetMapping("/users/{userId}/tarefas")
+    public String viewUserTarefas(@PathVariable Long userId, Model model) {
         User user = adminService.getUserById(userId).orElse(null);
         if (user == null) {
             return "redirect:/admin/users";
         }
-        List<Task> tasks = adminService.getUserTasks(userId);
+        List<Tarefa> tarefas = adminService.getUserTarefas(userId);
         model.addAttribute("user", user);
-        model.addAttribute("tasks", tasks);
-        return "admin/user-tasks";
+        model.addAttribute("tarefas", tarefas);
+        return "admin/user-tarefas";
     }
 }

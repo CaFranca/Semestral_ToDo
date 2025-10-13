@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Admin - Taskzz</title>
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <nav class="admin-sidebar">
+    <div class="sidebar-header">
+      <h2><i class="bi bi-shield-check"></i> Admin</h2>
+      <button class="sidebar-close" id="admin-sidebar-close">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="sidebar-content">
+      <ul class="sidebar-nav">
+        <li class="nav-item active">
+          <a href="#" class="nav-link">
+            <i class="bi bi-speedometer2"></i>
+            Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a th:href="@{/admin/users}" class="nav-link">
+            <i class="bi bi-people"></i>
+            Usuários
+          </a>
+        </li>
+        <li class="nav-item">
+          <a th:href="@{/admin/tarefas}" class="nav-link">
+            <i class="bi bi-list-task"></i>
+            Tarefas
+          </a>
+        </li>
+        <li class="nav-item">
+          <a th:href="@{/tarefas}" class="nav-link">
+            <i class="bi bi-arrow-left"></i>
+            Voltar ao App
+          </a>
+        </li>
+        <li class="nav-item">
+          <a th:href="@{/logout}" class="nav-link text-danger">
+            <i class="bi bi-box-arrow-right"></i>
+            Sair
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-header">
+      <div class="header-content">
+        <button class="sidebar-toggle-desktop" id="admin-sidebar-toggle">
+          <i class="bi bi-list"></i>
+          <span>Menu</span>
+        </button>
+        <div class="header-title">
+          <h1>Dashboard Administrativo</h1>
+          <p>Visão geral do sistema Taskzz</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card task-item">
+        <div class="stat-icon users">
+          <i class="bi bi-people"></i>
+        </div>
+        <div class="stat-info">
+          <h3 th:text="${totalUsers}">0</h3>
+          <p>Total Usuários</p>
+        </div>
+      </div>
+
+      <div class="stat-card task-item">
+        <div class="stat-icon tasks">
+          <i class="bi bi-list-task"></i>
+        </div>
+        <div class="stat-info">
+          <h3 th:text="${totalTarefas}">0</h3>
+          <p>Total Tarefas</p>
+        </div>
+      </div>
+
+      <div class="stat-card task-item">
+        <div class="stat-icon completed">
+          <i class="bi bi-check-circle"></i>
+        </div>
+        <div class="stat-info">
+          <h3 th:text="${completedTarefas}">0</h3>
+          <p>Tarefas Concluídas</p>
+        </div>
+      </div>
+
+      <div class="stat-card task-item">
+        <div class="stat-icon pending">
+          <i class="bi bi-clock"></i>
+        </div>
+        <div class="stat-info">
+          <h3 th:text="${pendingTarefas}">0</h3>
+          <p>Tarefas Pendentes</p>
+        </div>
+      </div>
+
+      <div class="stat-card task-item">
+        <div class="stat-icon admin">
+          <i class="bi bi-shield-check"></i>
+        </div>
+        <div class="stat-info">
+          <h3 th:text="${adminUsers}">0</h3>
+          <p>Administradores</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h2 class="app-title medium">Ações Rápidas</h2>
+      <div class="actions-grid">
+        <a th:href="@{/admin/users}" class="action-card task-item">
+          <i class="bi bi-people"></i>
+          <span>Gerenciar Usuários</span>
+        </a>
+        <a th:href="@{/admin/tarefas}" class="action-card task-item">
+          <i class="bi bi-list-task"></i>
+          <span>Gerenciar Tarefas</span>
+        </a>
+        <a th:href="@{/register-admin}" class="action-card task-item">
+          <i class="bi bi-person-plus"></i>
+          <span>Novo Admin</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile Sidebar Toggle -->
+  <button class="sidebar-toggle-mobile" id="admin-sidebar-toggle-mobile">
+    <i class="bi bi-list"></i>
+  </button>
+
+  <!-- Overlay -->
+  <div class="sidebar-overlay" id="admin-sidebar-overlay"></div>
+</div>
+
+<script>
+  // Admin sidebar functionality
+  document.addEventListener('DOMContentLoaded', function() {
+      const sidebar = document.querySelector('.admin-sidebar');
+      const sidebarToggle = document.getElementById('admin-sidebar-toggle');
+      const sidebarToggleMobile = document.getElementById('admin-sidebar-toggle-mobile');
+      const sidebarClose = document.getElementById('admin-sidebar-close');
+      const overlay = document.getElementById('admin-sidebar-overlay');
+
+      function openSidebar() {
+          sidebar.classList.add('open');
+          overlay.classList.add('active');
+          document.body.classList.add('sidebar-open');
+      }
+
+      function closeSidebar() {
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+          document.body.classList.remove('sidebar-open');
+      }
+
+      sidebarToggle?.addEventListener('click', openSidebar);
+      sidebarToggleMobile?.addEventListener('click', openSidebar);
+      sidebarClose?.addEventListener('click', closeSidebar);
+      overlay?.addEventListener('click', closeSidebar);
+
+      // Close sidebar on escape key
+      document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+              closeSidebar();
+          }
+      });
+  });
+</script>
+
+<style>
+  .admin-layout {
+      display: flex;
+      min-height: 100vh;
+      background: var(--background);
+      position: relative;
+  }
+
+  /* Admin Sidebar */
+  .admin-sidebar {
+      position: fixed;
+      top: 0;
+      left: -320px;
+      width: 320px;
+      height: 100vh;
+      background: var(--surface);
+      box-shadow: var(--box-shadow);
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+  }
+
+  .admin-sidebar.open {
+      left: 0;
+  }
+
+  .admin-sidebar .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--primary);
+      color: white;
+  }
+
+  .admin-sidebar .sidebar-header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+  }
+
+  .admin-sidebar .sidebar-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: var(--border-radius-sm);
+      transition: var(--transition);
+  }
+
+  .admin-sidebar .sidebar-close:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.1);
+  }
+
+  .admin-sidebar .sidebar-content {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+  }
+
+  .admin-sidebar .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+  }
+
+  .admin-sidebar .nav-item {
+      margin-bottom: 0.5rem;
+  }
+
+  .admin-sidebar .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: var(--border-radius-sm);
+      transition: var(--transition);
+      gap: 0.75rem;
+  }
+
+  .admin-sidebar .nav-link:hover {
+      background: var(--light-bg);
+      transform: translateX(5px);
+  }
+
+  .admin-sidebar .nav-item.active .nav-link {
+      background: var(--primary);
+      color: white;
+  }
+
+  /* Main Content */
+  .admin-main {
+      flex: 1;
+      padding: 2rem;
+      background: var(--background);
+      min-height: 100vh;
+      transition: margin-left 0.3s ease;
+  }
+
+  .admin-header {
+      margin-bottom: 2rem;
+  }
+
+  .header-content {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+  }
+
+  .sidebar-toggle-desktop {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius-sm);
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+  }
+
+  .sidebar-toggle-desktop:hover {
+      background: var(--light-bg);
+      transform: translateY(-2px);
+  }
+
+  .header-title h1 {
+      margin: 0 0 0.5rem 0;
+      color: var(--text);
+      font-size: 2rem;
+      font-weight: 700;
+  }
+
+  .header-title p {
+      margin: 0;
+      color: var(--text-secondary);
+  }
+
+  /* Statistics Grid */
+  .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+  }
+
+  .stat-card {
+      background: var(--surface);
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: var(--transition);
+      border-left: 4px solid transparent;
+  }
+
+  .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--box-shadow-hover);
+  }
+
+  .stat-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+      flex-shrink: 0;
+  }
+
+  .stat-icon.users { background: var(--success); }
+  .stat-icon.tasks { background: var(--primary); }
+  .stat-icon.completed { background: var(--success); }
+  .stat-icon.pending { background: var(--warning); }
+  .stat-icon.admin { background: var(--danger); }
+
+  .stat-info h3 {
+      margin: 0;
+      font-size: 2rem;
+      color: var(--text);
+      font-weight: 700;
+  }
+
+  .stat-info p {
+      margin: 0.25rem 0 0 0;
+      color: var(--text-secondary);
+      font-weight: 600;
+  }
+
+  /* Quick Actions */
+  .quick-actions h2 {
+      margin-bottom: 1.5rem;
+      color: var(--text);
+  }
+
+  .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+  }
+
+  .action-card {
+      background: var(--surface);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      text-decoration: none;
+      color: var(--text);
+      text-align: center;
+      transition: var(--transition);
+      border-left: 4px solid var(--primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+  }
+
+  .action-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--box-shadow-hover);
+      color: var(--text);
+  }
+
+  .action-card i {
+      font-size: 2.5rem;
+      color: var(--primary);
+  }
+
+  .action-card span {
+      display: block;
+      font-weight: 600;
+      font-size: 1.1rem;
+  }
+
+  /* Mobile Sidebar Toggle */
+  .sidebar-toggle-mobile {
+      display: none;
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 100;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      box-shadow: var(--box-shadow);
+      cursor: pointer;
+      transition: var(--transition);
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+  }
+
+  .sidebar-toggle-mobile:hover {
+      transform: scale(1.1);
+  }
+
+  /* Overlay */
+  .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+  }
+
+  .sidebar-overlay.active {
+      opacity: 1;
+      visibility: visible;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+      .admin-sidebar {
+          width: 85%;
+          max-width: 300px;
+          left: -100%;
+      }
+
+      .admin-sidebar.open {
+          left: 0;
+      }
+
+      .sidebar-toggle-mobile {
+          display: flex;
+      }
+
+      .stats-grid {
+          grid-template-columns: 1fr;
+      }
+
+      .actions-grid {
+          grid-template-columns: 1fr;
+      }
+
+      .admin-main {
+          padding: 1rem;
+      }
+
+      .header-content {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+      }
+
+      .header-title h1 {
+          font-size: 1.5rem;
+      }
+  }
+
+  @media (min-width: 1200px) {
+      .stats-grid {
+          grid-template-columns: repeat(3, 1fr);
+      }
+  }
+
+  /* Animation for sidebar content */
+  .admin-sidebar .sidebar-content > * {
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.3s ease;
+  }
+
+  .admin-sidebar.open .sidebar-content > * {
+      opacity: 1;
+      transform: translateX(0);
+  }
+
+  /* Stagger animation for sidebar items */
+  .admin-sidebar .sidebar-content > *:nth-child(1) { transition-delay: 0.1s; }
+  .admin-sidebar .sidebar-content > *:nth-child(2) { transition-delay: 0.15s; }
+  .admin-sidebar .sidebar-content > *:nth-child(3) { transition-delay: 0.2s; }
+  .admin-sidebar .sidebar-content > *:nth-child(4) { transition-delay: 0.25s; }
+  .admin-sidebar .sidebar-content > *:nth-child(5) { transition-delay: 0.3s; }
+
+  .text-danger {
+      color: var(--danger) !important;
+  }
+</style>
+</body>
+</html>

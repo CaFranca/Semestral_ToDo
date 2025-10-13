@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editar Tarefa - Taskzz</title>
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+<div class="admin-layout">
+  <nav class="admin-sidebar">
+    <div class="sidebar-header">
+      <h2><i class="bi bi-shield-check"></i> Admin</h2>
+      <button class="sidebar-close" id="admin-sidebar-close">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="sidebar-content">
+      <ul class="sidebar-nav">
+        <li class="nav-item">
+          <a th:href="@{/admin/dashboard}" class="nav-link">
+            <i class="bi bi-speedometer2"></i>
+            Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a th:href="@{/admin/users}" class="nav-link">
+            <i class="bi bi-people"></i>
+            Usuários
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a th:href="@{/admin/tarefas}" class="nav-link">
+            <i class="bi bi-list-task"></i>
+            Tarefas
+          </a>
+        </li>
+        <li class="nav-item">
+          <a th:href="@{/tarefas}" class="nav-link">
+            <i class="bi bi-arrow-left"></i>
+            Voltar ao App
+          </a>
+        </li>
+        <li class="nav-item">
+          <a th:href="@{/logout}" class="nav-link text-danger">
+            <i class="bi bi-box-arrow-right"></i>
+            Sair
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <div class="header-content">
+        <button class="sidebar-toggle-desktop" id="admin-sidebar-toggle">
+          <i class="bi bi-list"></i>
+          <span>Menu</span>
+        </button>
+        <div class="header-title">
+          <h1>Editar Tarefa</h1>
+          <p>Modifique as informações da tarefa</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-content task-app-container">
+      <form th:action="@{/admin/tarefas/update/{id}(id=${tarefa.id})}" method="post" class="task-form">
+        <div class="form-group">
+          <label for="texto" class="form-label">
+            <i class="bi bi-card-text"></i>
+            Texto da Tarefa:
+          </label>
+          <div class="input-with-icon">
+                            <textarea id="texto" name="texto" class="form-control" rows="3" required
+                                      th:text="${tarefa.texto}"></textarea>
+            <i class="bi bi-card-text input-icon"></i>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="status" class="form-label">
+            <i class="bi bi-list-check"></i>
+            Status:
+          </label>
+          <div class="input-with-icon">
+            <select id="status" name="status" class="form-control" required>
+              <option th:each="status : ${statusOptions}"
+                      th:value="${status}"
+                      th:text="${status}"
+                      th:selected="${tarefa.status == status}">
+              </option>
+            </select>
+            <i class="bi bi-list-check input-icon"></i>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dataVencimento" class="form-label">
+            <i class="bi bi-calendar"></i>
+            Data de Vencimento:
+          </label>
+          <div class="input-with-icon">
+            <input type="date" id="dataVencimento" name="dataVencimento" class="form-control"
+                   th:value="${tarefa.dataVencimento != null} ? ${#temporals.format(tarefa.dataVencimento, 'yyyy-MM-dd')} : ''" />
+            <i class="bi bi-calendar input-icon"></i>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="bi bi-tags"></i>
+            Tags (separadas por vírgula):
+          </label>
+          <div class="input-with-icon">
+            <input type="text" name="tags" class="form-control"
+                   th:value="${#strings.setJoin(tarefa.tags, ',')}"
+                   placeholder="tag1, tag2, tag3" />
+            <i class="bi bi-tags input-icon"></i>
+          </div>
+          <small class="form-text">Digite as tags separadas por vírgula</small>
+        </div>
+
+        <div class="form-info task-item">
+          <p><strong>Usuário:</strong> <span th:text="${tarefa.user.name}"></span></p>
+          <p><strong>Email:</strong> <span th:text="${tarefa.user.email}"></span></p>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-circle"></i>
+            Atualizar Tarefa
+          </button>
+          <a th:href="@{/admin/tarefas}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Cancelar
+          </a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- Mobile Sidebar Toggle -->
+  <button class="sidebar-toggle-mobile" id="admin-sidebar-toggle-mobile">
+    <i class="bi bi-list"></i>
+  </button>
+
+  <!-- Overlay -->
+  <div class="sidebar-overlay" id="admin-sidebar-overlay"></div>
+</div>
+
+<script>
+  // Same sidebar functionality
+  document.addEventListener('DOMContentLoaded', function() {
+      const sidebar = document.querySelector('.admin-sidebar');
+      const sidebarToggle = document.getElementById('admin-sidebar-toggle');
+      const sidebarToggleMobile = document.getElementById('admin-sidebar-toggle-mobile');
+      const sidebarClose = document.getElementById('admin-sidebar-close');
+      const overlay = document.getElementById('admin-sidebar-overlay');
+
+      function openSidebar() {
+          sidebar.classList.add('open');
+          overlay.classList.add('active');
+          document.body.classList.add('sidebar-open');
+      }
+
+      function closeSidebar() {
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+          document.body.classList.remove('sidebar-open');
+      }
+
+      sidebarToggle?.addEventListener('click', openSidebar);
+      sidebarToggleMobile?.addEventListener('click', openSidebar);
+      sidebarClose?.addEventListener('click', closeSidebar);
+      overlay?.addEventListener('click', closeSidebar);
+
+      document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+              closeSidebar();
+          }
+      });
+  });
+</script>
+</body>
+</html>

@@ -164,7 +164,7 @@ public class PasswordResetService {
             }
         } else {
             // Development: Print to console
-            System.out.println("🔧 Modo desenvolvimento - Email impresso no console:");
+            System.out.println(" Modo desenvolvimento - Email impresso no console:");
             printToConsole(email, token, key, method);
         }
     }

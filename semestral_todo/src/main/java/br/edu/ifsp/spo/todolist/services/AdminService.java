@@ -1,8 +1,8 @@
 package br.edu.ifsp.spo.todolist.services;
 
-import br.edu.ifsp.spo.todolist.models.Task;
+import br.edu.ifsp.spo.todolist.models.Tarefa;
 import br.edu.ifsp.spo.todolist.models.User;
-import br.edu.ifsp.spo.todolist.repositories.TaskRepository;
+import br.edu.ifsp.spo.todolist.repositories.TarefasRepository;
 import br.edu.ifsp.spo.todolist.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,14 +18,14 @@ public class AdminService {
     private UserRepository userRepository;
 
     @Autowired
-    private TaskRepository taskRepository;
+    private TarefasRepository tarefasRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     // User management methods
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userRepository.findAllByOrderByCreatedAtDesc();
     }
 
     public Optional<User> getUserById(Long id) {
@@ -46,10 +46,12 @@ public class AdminService {
 
     public boolean deleteUser(Long id) {
         if (userRepository.existsById(id)) {
-            // Delete user's tasks first
-            List<Task> userTasks = taskRepository.findByUserId(id);
-            taskRepository.deleteAll(userTasks);
-
+            // Delete user's tarefas first
+            User user = userRepository.findById(id).orElse(null);
+            if (user != null) {
+                List<Tarefa> userTarefas = tarefasRepository.findByUser(user);
+                tarefasRepository.deleteAll(userTarefas);
+            }
             // Then delete user
             userRepository.deleteById(id);
             return true;
@@ -57,48 +59,56 @@ public class AdminService {
         return false;
     }
 
-    // Task management methods
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    // Tarefa management methods
+    public List<Tarefa> getAllTarefas() {
+        return tarefasRepository.findAllByOrderByIdDesc();
     }
 
-    public List<Task> getUserTasks(Long userId) {
-        return taskRepository.findByUserId(userId);
+    public List<Tarefa> getUserTarefas(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            return tarefasRepository.findByUser(user);
+        }
+        return List.of();
     }
 
-    public Optional<Task> getTaskById(Long id) {
-        return taskRepository.findById(id);
+    public Optional<Tarefa> getTarefaById(Long id) {
+        return tarefasRepository.findById(id);
     }
 
-    public Task updateTask(Long id, Task taskDetails) {
-        return taskRepository.findById(id).map(task -> {
-            task.setTitle(taskDetails.getTitle());
-            task.setDescription(taskDetails.getDescription());
-            task.setCompleted(taskDetails.isCompleted());
-            task.setDueDate(taskDetails.getDueDate());
-            return taskRepository.save(task);
+    public Tarefa updateTarefa(Long id, Tarefa tarefaDetails) {
+        return tarefasRepository.findById(id).map(tarefa -> {
+            tarefa.setTexto(tarefaDetails.getTexto());
+            tarefa.setStatus(tarefaDetails.getStatus());
+            tarefa.setDataVencimento(tarefaDetails.getDataVencimento());
+            tarefa.setTags(tarefaDetails.getTags());
+            return tarefasRepository.save(tarefa);
         }).orElse(null);
     }
 
-    public boolean deleteTask(Long id) {
-        if (taskRepository.existsById(id)) {
-            taskRepository.deleteById(id);
+    public boolean deleteTarefa(Long id) {
+        if (tarefasRepository.existsById(id)) {
+            tarefasRepository.deleteById(id);
             return true;
         }
         return false;
     }
 
-    // Statistics
+    // Statistics - UPDATED to use repository methods
     public long getTotalUsers() {
         return userRepository.count();
     }
 
-    public long getTotalTasks() {
-        return taskRepository.count();
+    public long getTotalTarefas() {
+        return tarefasRepository.count();
     }
 
-    public long getCompletedTasks() {
-        return taskRepository.countByCompleted(true);
+    public long getCompletedTarefas() {
+        return tarefasRepository.countByStatus(Tarefa.Status.CONCLUIDA);
+    }
+
+    public long getPendingTarefas() {
+        return tarefasRepository.countByStatus(Tarefa.Status.PENDENTE);
     }
 
     public long getAdminUsersCount() {

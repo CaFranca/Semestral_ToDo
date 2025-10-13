@@ -28,6 +28,14 @@ public interface TarefasRepository extends JpaRepository<Tarefa, Long> {
     List<Tarefa> findByUserOrderByIdAsc(User user);
     List<Tarefa> findByUserOrderByIdDesc(User user);
 
+    // Add methods for admin functionality
+    List<Tarefa> findAllByOrderByIdDesc();
+    List<Tarefa> findAllByOrderByIdAsc();
+
+    // Count methods for statistics
+    long countByUser(User user);
+    long countByStatus(Status status);
+
     // Busca por tag usando JPQL (assumindo que Tarefa tem um Set<String> tags)
     @Query("SELECT t FROM Tarefa t JOIN t.tags tag WHERE t.user = :user AND tag = :tag")
     List<Tarefa> findByUserAndTag(@Param("user") User user, @Param("tag") String tag);

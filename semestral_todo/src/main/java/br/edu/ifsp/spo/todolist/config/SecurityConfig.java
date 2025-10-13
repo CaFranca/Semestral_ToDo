@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 
 @Configuration
@@ -26,6 +27,7 @@ public class SecurityConfig {
                                 "/",
                                 "/login",
                                 "/register",
+                                "/register-admin",
                                 "/forgot-password",
                                 "/reset-password",
                                 "/reset-password-key",
@@ -38,12 +40,13 @@ public class SecurityConfig {
                                 "/favicon.ico",
                                 "/error"
                         ).permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/tarefas", true)
-                        .failureUrl("/login?error=true")  // Added error URL
+                        .successHandler(customAuthenticationSuccessHandler()) // Use custom success handler
+                        .failureUrl("/login?error=true")
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -58,7 +61,7 @@ public class SecurityConfig {
                                 .policyDirectives("script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:")
                         )
                         .frameOptions(frame -> frame
-                                .sameOrigin()  // Changed to sameOrigin for modern apps
+                                .sameOrigin()
                         )
                         .xssProtection(xss -> xss
                                 .headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)
@@ -70,10 +73,25 @@ public class SecurityConfig {
                         )
                 )
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**")  // Example for API endpoints
+                        .ignoringRequestMatchers("/api/**")
                 );
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return (request, response, authentication) -> {
+            // Check if user has ADMIN role
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+
+            if (isAdmin) {
+                response.sendRedirect("/admin/dashboard");
+            } else {
+                response.sendRedirect("/tarefas");
+            }
+        };
     }
 
     @Bean

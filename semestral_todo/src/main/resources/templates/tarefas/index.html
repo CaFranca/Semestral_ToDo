@@ -7,363 +7,9 @@
     <title>Taskzz - Lista de Tarefas</title>
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-</head>
-
-<body>
-    <!-- Mobile Menu Toggle -->
-    <button class="sidebar-toggle-mobile" id="sidebarToggleMobile" aria-label="Abrir menu de filtros">
-        <i class="bi bi-funnel"></i>
-    </button>
-
-    <!-- Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <!-- Edit Sidebar Overlay (Placeholder) -->
-    <div class="edit-sidebar-overlay" id="editSidebarOverlay" style="display: none;"></div>
-
-    <div class="app-layout">
-        <!-- Sidebar for Filters -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h3>
-                    <i class="bi bi-funnel"></i>
-                    Filtros
-                </h3>
-                <button class="sidebar-close" id="sidebarClose" aria-label="Fechar menu">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-
-            <div class="sidebar-content">
-                <form th:action="@{/tarefas}" method="get" class="filter-form">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="bi bi-filter-circle"></i>
-                            Status:
-                        </label>
-                        <select name="filtroStatus" class="form-control">
-                            <option value="todas" th:selected="${filtroStatus=='todas'}">Todas as Tarefas</option>
-                            <option value="pendente" th:selected="${filtroStatus=='pendente'}">Pendente</option>
-                            <option value="fazendo" th:selected="${filtroStatus=='fazendo'}">Em Andamento</option>
-                            <option value="concluida" th:selected="${filtroStatus=='concluida'}">Concluída</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="bi bi-tags"></i>
-                            Tag:
-                        </label>
-                        <div class="input-with-icon">
-                            <input list="tagsExistentes" name="tag" th:value="${tag}"
-                                placeholder="ex: trabalho, urgente, pessoal" class="form-control" />
-                            <i class="bi bi-tag input-icon"></i>
-                        </div>
-                        <datalist id="tagsExistentes">
-                            <option th:each="t : ${tagsExistentes}" th:value="${t}"></option>
-                        </datalist>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="bi bi-calendar-event"></i>
-                            Data Início:
-                        </label>
-                        <div class="input-with-icon">
-                            <input type="date" name="dataInicio" th:value="${dataInicio}" class="form-control" />
-                            <i class="bi bi-calendar-date input-icon"></i>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="bi bi-calendar-check"></i>
-                            Data Fim:
-                        </label>
-                        <div class="input-with-icon">
-                            <input type="date" name="dataFim" th:value="${dataFim}" class="form-control" />
-                            <i class="bi bi-calendar-date input-icon"></i>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="bi bi-sort-down"></i>
-                            Ordenar por:
-                        </label>
-                        <select name="ordem" class="form-control">
-                            <option value="asc" th:selected="${ordem=='asc'}">ID Crescente</option>
-                            <option value="desc" th:selected="${ordem=='desc'}">ID Decrescente</option>
-                        </select>
-                    </div>
-
-                    <div class="sidebar-actions">
-                        <button type="submit" class="btn btn-primary btn-block filter-btn">
-                            <i class="bi bi-funnel-fill"></i>
-                            Aplicar Filtros
-                        </button>
-                        <button type="reset" class="btn btn-secondary btn-block" id="resetFilters">
-                            <i class="bi bi-arrow-clockwise"></i>
-                            Limpar Filtros
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </aside>
-
-        <!-- Edit Sidebar (Placeholder - Hidden by default) -->
-        <aside class="edit-sidebar" id="editSidebar" style="display: none;">
-            <div class="edit-sidebar-header">
-                <h3>
-                    <i class="bi bi-pencil"></i>
-                    Editar Tarefa
-                </h3>
-                <button class="edit-sidebar-close" id="editSidebarClose">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-
-            <div class="edit-sidebar-content">
-                <!-- Task Preview -->
-                <div id="taskPreview" class="task-preview">
-                    <div class="task-title">Funcionalidade de edição em desenvolvimento</div>
-                    <div class="task-details">
-                        <span class="status-badge status-pending">Em breve</span>
-                    </div>
-                </div>
-
-                <!-- Edit Form Placeholder -->
-                <div class="edit-form-placeholder">
-                    <div class="placeholder-message">
-                        <i class="bi bi-tools"
-                            style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
-                        <h4>Funcionalidade em Desenvolvimento</h4>
-                        <p>A edição de tarefas estará disponível em breve!</p>
-                    </div>
-                </div>
-
-                <div class="edit-sidebar-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelEdit">
-                        <i class="bi bi-x-circle"></i>
-                        Fechar
-                    </button>
-                    <button type="button" class="btn btn-primary" disabled>
-                        <i class="bi bi-clock"></i>
-                        Em Breve
-                    </button>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content" id="main">
-            <div class="main-container">
-                <div class="task-app-container large">
-                    <!-- Header Section -->
-                    <div class="app-header">
-                        <div class="header-content">
-                            <div class="header-title">
-                                <h1 class="app-title medium">
-                                    <i class="bi bi-check2-square"></i>
-                                    Taskzz
-                                </h1>
-                                <p class="app-subtitle">
-                                    Sistema de gerenciamento de tarefas para a disciplina SPOLBP2
-                                </p>
-                            </div>
-
-                            <div class="header-actions">
-                                <button class="btn btn-outline sidebar-toggle-desktop" id="sidebarToggleDesktop">
-                                    <i class="bi bi-funnel"></i>
-                                    Filtros
-                                </button>
-
-                                <button id="theme-toggle" class="btn btn-secondary" aria-label="Alternar tema">
-                                    <span id="theme-icon" class="theme-icon">
-                                        <i class="bi bi-moon"></i>
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Add Task Form Section -->
-                    <div class="form-section">
-                        <div class="section-header">
-                            <i class="bi bi-plus-circle"></i>
-                            <h2>Nova Tarefa</h2>
-                        </div>
-                        <div class="form-container p-3 mb-3">
-                            <form th:action="@{/tarefas}" th:object="${tarefaForm}" method="post" class="task-form">
-                                <div class="form-group">
-                                    <div class="input-with-icon">
-                                        <input type="text" th:field="*{texto}" class="form-control task-input"
-                                            placeholder="Descreva sua nova tarefa..." required />
-                                        <i class="bi bi-pencil-square input-icon"></i>
-                                    </div>
-                                </div>
-
-                                <div class="task-input-group expanded">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <i class="bi bi-calendar-x"></i>
-                                            Vencimento:
-                                        </label>
-                                        <div class="input-with-icon">
-                                            <input type="date" th:field="*{dataVencimento}" class="form-control" />
-                                            <i class="bi bi-calendar-event input-icon"></i>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <i class="bi bi-list-check"></i>
-                                            Status:
-                                        </label>
-                                        <select th:field="*{status}" class="form-control">
-                                            <option th:value="PENDENTE">Pendente</option>
-                                            <option th:value="FAZENDO">Em Andamento</option>
-                                            <option th:value="CONCLUIDA">Concluída</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <i class="bi bi-tags"></i>
-                                            Tags:
-                                        </label>
-                                        <div class="input-with-icon">
-                                            <input type="text" th:field="*{tagsString}" class="form-control"
-                                                placeholder="trabalho, urgente, pessoal" />
-                                            <i class="bi bi-tag input-icon"></i>
-                                        </div>
-                                        <small class="form-hint">Separe por vírgula</small>
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary btn-block add-task-btn">
-                                    <i class="bi bi-plus-lg"></i>
-                                    Adicionar Tarefa
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Tasks List Section -->
-                    <div class="tasks-section">
-                        <div class="section-header">
-                            <div class="tasks-header-left">
-                                <i class="bi bi-list-task"></i>
-                                <h2>Minhas Tarefas</h2>
-                                <span class="task-count" th:text="'(' + ${tarefas.size()} + ')'"></span>
-                            </div>
-
-                            <form th:action="@{/logout}" method="post" class="logout-form">
-                                <button type="submit" class="btn btn-danger logout-btn">
-                                    <i class="bi bi-box-arrow-right"></i>
-                                    Sair
-                                </button>
-                            </form>
-                        </div>
-
-                        <div class="p-3">
-                            <div th:if="${tarefas.empty}" class="empty-state">
-                                <i class="bi bi-inbox"></i>
-                                <h3>Nenhuma tarefa encontrada</h3>
-                                <p>Adicione uma nova tarefa ou ajuste seus filtros</p>
-                            </div>
-
-                            <ul class="task-list" th:unless="${tarefas.empty}">
-                                <li th:each="tarefa, stat : ${tarefas}" th:class="${'task-item ' + (tarefa.vencida ? 'vencida ' : '') +
-                                            (tarefa.status.name() == 'CONCLUIDA' ? 'completed' : '')}">
-                                    <div class="task-info">
-                                        <div class="task-header">
-                                            <span class="task-title" th:text="${tarefa.texto}"></span>
-                                            <span class="task-id" th:text="'#' + ${tarefa.id}"></span>
-                                        </div>
-
-                                        <div class="task-details">
-                                            <span class="status-badge" th:class="${'status-badge ' +
-                                                  (tarefa.status.name() == 'PENDENTE' ? 'status-pending' :
-                                                   tarefa.status.name() == 'FAZENDO' ? 'status-doing' :
-                                                   'status-completed')}">
-                                                <i th:class="${tarefa.status.name() == 'PENDENTE' ? 'bi bi-clock' :
-                                                             tarefa.status.name() == 'FAZENDO' ? 'bi bi-play-circle' :
-                                                             'bi bi-check-circle'}"></i>
-                                                <span th:text="${tarefa.status.name()}"></span>
-                                            </span>
-
-                                            <span class="due-date" th:if="${tarefa.dataVencimento}">
-                                                <i class="bi bi-calendar-event"></i>
-                                                <span
-                                                    th:text="${#temporals.format(tarefa.dataVencimento, 'dd/MM/yyyy')}"></span>
-                                            </span>
-
-                                            <div th:if="${tarefa.tags != null and !tarefa.tags.empty}"
-                                                class="task-tags">
-                                                <span th:each="tag : ${tarefa.tags}" class="tag">
-                                                    <i class="bi bi-tag"></i>
-                                                    <span th:text="${tag}"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="task-actions">
-                                        <!-- Edit Button (Placeholder) -->
-                                        <button type="button" class="btn btn-primary edit-btn-placeholder"
-                                            onclick="showEditPlaceholder()">
-                                            <i class="bi bi-pencil"></i>
-                                            Editar
-                                        </button>
-
-                                        <a th:if="${tarefa.status.name() != 'CONCLUIDA'}"
-                                            th:href="@{/tarefas/{id}/marcar-como/CONCLUIDA(id=${tarefa.id})}"
-                                            class="btn-action complete-btn">
-                                            <button type="button" class="btn btn-success">
-                                                <i class="bi bi-check-lg"></i>
-                                                Concluir
-                                            </button>
-                                        </a>
-                                        <a th:if="${tarefa.status.name() == 'CONCLUIDA'}"
-                                            th:href="@{/tarefas/{id}/marcar-como/PENDENTE(id=${tarefa.id})}"
-                                            class="btn-action undo-btn">
-                                            <button type="button" class="btn btn-secondary">
-                                                <i class="bi bi-arrow-counterclockwise"></i>
-                                                Reabrir
-                                            </button>
-                                        </a>
-                                        <a th:href="@{/tarefas/{id}/deletar-tarefa(id=${tarefa.id})}"
-                                            class="btn-action delete-btn">
-                                            <button type="button" class="btn btn-delete">
-                                                <i class="bi bi-trash"></i>
-                                                Excluir
-                                            </button>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Footer Section -->
-                    <div class="app-footer">
-                        <img src="https://i.ytimg.com/vi/pka5crwZv4I/sddefault.jpg" alt="Ilustração de produtividade"
-                            class="decorative-img">
-                        <p class="footer-text">
-                            <i class="bi bi-lightbulb"></i>
-                            Organize suas tarefas e aumente sua produtividade
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- JavaScript Files -->
-    <script th:src="@{/js/theme.js}"></script>
-    <script th:src="@{/js/sidebar.js}"></script>
 
     <style>
-        /* Center the main content */
+        /* Layout and Responsive Styles */
         .main-container {
             display: flex;
             justify-content: center;
@@ -379,9 +25,7 @@
             margin: 0 auto;
         }
 
-        /* Ensure proper scrolling */
-        html,
-        body {
+        html, body {
             height: 100%;
             overflow-x: hidden;
         }
@@ -395,9 +39,8 @@
             min-height: 100vh;
         }
 
-        /* Center align sections */
-        .form-section,
-        .tasks-section {
+        /* Section Layout */
+        .form-section, .tasks-section {
             display: flex;
             flex-direction: column;
         }
@@ -409,23 +52,14 @@
             width: 100%;
         }
 
-        /* Center empty state */
-        .empty-state {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Task actions spacing */
+        /* Task Actions */
         .task-actions {
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
         }
 
-        /* Edit sidebar placeholder styles */
+        /* Edit Sidebar Styles */
         .edit-form-placeholder {
             text-align: center;
             padding: 2rem 1rem;
@@ -442,6 +76,16 @@
             color: var(--text);
         }
 
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .task-actions {
                 justify-content: center;
@@ -453,32 +97,407 @@
             }
         }
     </style>
+</head>
 
-    <script>
-        // Simple placeholder function for edit button
-        function showEditPlaceholder() {
-            const editSidebar = document.getElementById('editSidebar');
-            const editOverlay = document.getElementById('editSidebarOverlay');
+<body>
+<!-- Mobile Menu Toggle -->
+<button class="sidebar-toggle-mobile" id="sidebarToggleMobile" aria-label="Abrir menu de filtros">
+    <i class="bi bi-funnel"></i>
+</button>
 
-            if (editSidebar && editOverlay) {
-                editSidebar.style.display = 'flex';
-                editOverlay.style.display = 'block';
+<!-- Overlays -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="edit-sidebar-overlay" id="editSidebarOverlay" style="display: none;"></div>
 
-                // Add close functionality
-                const closeBtn = document.getElementById('editSidebarClose');
-                const cancelBtn = document.getElementById('cancelEdit');
+<div class="app-layout">
+    <!-- Filter Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>
+                <i class="bi bi-funnel"></i>
+                Filtros
+            </h3>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Fechar menu">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
 
-                const closeSidebar = () => {
-                    editSidebar.style.display = 'none';
-                    editOverlay.style.display = 'none';
-                };
+        <div class="sidebar-content">
+            <form th:action="@{/tarefas}" method="get" class="filter-form">
+                <!-- Status Filter -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="bi bi-filter-circle"></i>
+                        Status:
+                    </label>
+                    <select name="filtroStatus" class="form-control">
+                        <option value="todas" th:selected="${filtroStatus=='todas'}">Todas as Tarefas</option>
+                        <option value="pendente" th:selected="${filtroStatus=='pendente'}">Pendente</option>
+                        <option value="fazendo" th:selected="${filtroStatus=='fazendo'}">Em Andamento</option>
+                        <option value="concluida" th:selected="${filtroStatus=='concluida'}">Concluída</option>
+                    </select>
+                </div>
 
-                if (closeBtn) closeBtn.onclick = closeSidebar;
-                if (cancelBtn) cancelBtn.onclick = closeSidebar;
-                editOverlay.onclick = closeSidebar;
-            }
+                <!-- Tag Filter -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="bi bi-tags"></i>
+                        Tag:
+                    </label>
+                    <div class="input-with-icon">
+                        <input list="tagsExistentes" name="tag" th:value="${tag}"
+                               placeholder="ex: trabalho, urgente, pessoal" class="form-control" />
+                        <i class="bi bi-tag input-icon"></i>
+                    </div>
+                    <datalist id="tagsExistentes">
+                        <option th:each="t : ${tagsExistentes}" th:value="${t}"></option>
+                    </datalist>
+                </div>
+
+                <!-- Date Range Filters -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="bi bi-calendar-event"></i>
+                        Data Início:
+                    </label>
+                    <div class="input-with-icon">
+                        <input type="date" name="dataInicio" th:value="${dataInicio}" class="form-control" />
+                        <i class="bi bi-calendar-date input-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="bi bi-calendar-check"></i>
+                        Data Fim:
+                    </label>
+                    <div class="input-with-icon">
+                        <input type="date" name="dataFim" th:value="${dataFim}" class="form-control" />
+                        <i class="bi bi-calendar-date input-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Sort Order -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="bi bi-sort-down"></i>
+                        Ordenar por:
+                    </label>
+                    <select name="ordem" class="form-control">
+                        <option value="asc" th:selected="${ordem=='asc'}">ID Crescente</option>
+                        <option value="desc" th:selected="${ordem=='desc'}">ID Decrescente</option>
+                    </select>
+                </div>
+
+                <!-- Filter Actions -->
+                <div class="sidebar-actions">
+                    <button type="submit" class="btn btn-primary btn-block filter-btn">
+                        <i class="bi bi-funnel-fill"></i>
+                        Aplicar Filtros
+                    </button>
+                    <button type="reset" class="btn btn-secondary btn-block" id="resetFilters">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        Limpar Filtros
+                    </button>
+                </div>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Edit Sidebar (Placeholder) -->
+    <aside class="edit-sidebar" id="editSidebar" style="display: none;">
+        <div class="edit-sidebar-header">
+            <h3>
+                <i class="bi bi-pencil"></i>
+                Editar Tarefa
+            </h3>
+            <button class="edit-sidebar-close" id="editSidebarClose">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="edit-sidebar-content">
+            <!-- Task Preview -->
+            <div id="taskPreview" class="task-preview">
+                <div class="task-title">Funcionalidade de edição em desenvolvimento</div>
+                <div class="task-details">
+                    <span class="status-badge status-pending">Em breve</span>
+                </div>
+            </div>
+
+            <!-- Edit Form Placeholder -->
+            <div class="edit-form-placeholder">
+                <div class="placeholder-message">
+                    <i class="bi bi-tools"
+                       style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
+                    <h4>Funcionalidade em Desenvolvimento</h4>
+                    <p>A edição de tarefas estará disponível em breve!</p>
+                </div>
+            </div>
+
+            <!-- Edit Actions -->
+            <div class="edit-sidebar-actions">
+                <button type="button" class="btn btn-secondary" id="cancelEdit">
+                    <i class="bi bi-x-circle"></i>
+                    Fechar
+                </button>
+                <button type="button" class="btn btn-primary" disabled>
+                    <i class="bi bi-clock"></i>
+                    Em Breve
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content" id="main">
+        <div class="main-container">
+            <div class="task-app-container large">
+                <!-- Header Section -->
+                <div class="app-header">
+                    <div class="header-content">
+                        <div class="header-title">
+                            <h1 class="app-title medium">
+                                <i class="bi bi-check2-square"></i>
+                                Taskzz
+                            </h1>
+                            <p class="app-subtitle">
+                                Sistema de gerenciamento de tarefas para a disciplina SPOLBP2
+                            </p>
+                        </div>
+
+                        <div class="header-actions">
+                            <button class="btn btn-outline sidebar-toggle-desktop" id="sidebarToggleDesktop">
+                                <i class="bi bi-funnel"></i>
+                                Filtros
+                            </button>
+
+                            <button id="theme-toggle" class="btn btn-secondary" aria-label="Alternar tema">
+                                    <span id="theme-icon" class="theme-icon">
+                                        <i class="bi bi-moon"></i>
+                                    </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Task Section -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="bi bi-plus-circle"></i>
+                        <h2>Nova Tarefa</h2>
+                    </div>
+                    <div class="form-container p-3 mb-3">
+                        <form th:action="@{/tarefas}" th:object="${tarefaForm}" method="post" class="task-form">
+                            <!-- Task Description -->
+                            <div class="form-group">
+                                <div class="input-with-icon">
+                                    <input type="text" th:field="*{texto}" class="form-control task-input"
+                                           placeholder="Descreva sua nova tarefa..." required />
+                                    <i class="bi bi-pencil-square input-icon"></i>
+                                </div>
+                            </div>
+
+                            <!-- Task Details -->
+                            <div class="task-input-group expanded">
+                                <!-- Due Date -->
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="bi bi-calendar-x"></i>
+                                        Vencimento:
+                                    </label>
+                                    <div class="input-with-icon">
+                                        <input type="date" th:field="*{dataVencimento}" class="form-control" />
+                                        <i class="bi bi-calendar-event input-icon"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Status -->
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="bi bi-list-check"></i>
+                                        Status:
+                                    </label>
+                                    <select th:field="*{status}" class="form-control">
+                                        <option th:value="PENDENTE">Pendente</option>
+                                        <option th:value="FAZENDO">Em Andamento</option>
+                                        <option th:value="CONCLUIDA">Concluída</option>
+                                    </select>
+                                </div>
+
+                                <!-- Tags -->
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="bi bi-tags"></i>
+                                        Tags:
+                                    </label>
+                                    <div class="input-with-icon">
+                                        <input type="text" th:field="*{tagsString}" class="form-control"
+                                               placeholder="trabalho, urgente, pessoal" />
+                                        <i class="bi bi-tag input-icon"></i>
+                                    </div>
+                                    <small class="form-hint">Separe por vírgula</small>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-primary btn-block add-task-btn">
+                                <i class="bi bi-plus-lg"></i>
+                                Adicionar Tarefa
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Tasks List Section -->
+                <div class="tasks-section">
+                    <div class="section-header">
+                        <div class="tasks-header-left">
+                            <i class="bi bi-list-task"></i>
+                            <h2>Minhas Tarefas</h2>
+                            <span class="task-count" th:text="'(' + ${tarefas.size()} + ')'"></span>
+                        </div>
+
+                        <!-- Logout Form -->
+                        <form th:action="@{/logout}" method="post" class="logout-form">
+                            <button type="submit" class="btn btn-danger logout-btn">
+                                <i class="bi bi-box-arrow-right"></i>
+                                Sair
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="p-3">
+                        <!-- Empty State -->
+                        <div th:if="${tarefas.empty}" class="empty-state">
+                            <i class="bi bi-inbox"></i>
+                            <h3>Nenhuma tarefa encontrada</h3>
+                            <p>Adicione uma nova tarefa ou ajuste seus filtros</p>
+                        </div>
+
+                        <!-- Tasks List -->
+                        <ul class="task-list" th:unless="${tarefas.empty}">
+                            <li th:each="tarefa, stat : ${tarefas}"
+                                th:class="${'task-item ' + (tarefa.vencida ? 'vencida ' : '') + (tarefa.status.name() == 'CONCLUIDA' ? 'completed' : '')}">
+
+                                <!-- Task Information -->
+                                <div class="task-info">
+                                    <div class="task-header">
+                                        <span class="task-title" th:text="${tarefa.texto}"></span>
+                                        <span class="task-id" th:text="'#' + ${tarefa.id}"></span>
+                                    </div>
+
+                                    <div class="task-details">
+                                        <!-- Status Badge -->
+                                        <span class="status-badge"
+                                              th:class="${'status-badge ' + (tarefa.status.name() == 'PENDENTE' ? 'status-pending' :
+                                                           tarefa.status.name() == 'FAZENDO' ? 'status-doing' : 'status-completed')}">
+                                                <i th:class="${tarefa.status.name() == 'PENDENTE' ? 'bi bi-clock' :
+                                                             tarefa.status.name() == 'FAZENDO' ? 'bi bi-play-circle' :
+                                                             'bi bi-check-circle'}"></i>
+                                                <span th:text="${tarefa.status.name()}"></span>
+                                            </span>
+
+                                        <!-- Due Date -->
+                                        <span class="due-date" th:if="${tarefa.dataVencimento}">
+                                                <i class="bi bi-calendar-event"></i>
+                                                <span th:text="${#temporals.format(tarefa.dataVencimento, 'dd/MM/yyyy')}"></span>
+                                            </span>
+
+                                        <!-- Tags -->
+                                        <div th:if="${tarefa.tags != null and !tarefa.tags.empty}" class="task-tags">
+                                                <span th:each="tag : ${tarefa.tags}" class="tag">
+                                                    <i class="bi bi-tag"></i>
+                                                    <span th:text="${tag}"></span>
+                                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Task Actions -->
+                                <div class="task-actions">
+                                    <!-- Edit Button -->
+                                    <button type="button" class="btn btn-primary edit-btn-placeholder"
+                                            onclick="showEditPlaceholder()">
+                                        <i class="bi bi-pencil"></i>
+                                        Editar
+                                    </button>
+
+                                    <!-- Complete/Reopen Buttons -->
+                                    <a th:if="${tarefa.status.name() != 'CONCLUIDA'}"
+                                       th:href="@{/tarefas/{id}/marcar-como/CONCLUIDA(id=${tarefa.id})}"
+                                       class="btn-action complete-btn">
+                                        <button type="button" class="btn btn-success">
+                                            <i class="bi bi-check-lg"></i>
+                                            Concluir
+                                        </button>
+                                    </a>
+                                    <a th:if="${tarefa.status.name() == 'CONCLUIDA'}"
+                                       th:href="@{/tarefas/{id}/marcar-como/PENDENTE(id=${tarefa.id})}"
+                                       class="btn-action undo-btn">
+                                        <button type="button" class="btn btn-secondary">
+                                            <i class="bi bi-arrow-counterclockwise"></i>
+                                            Reabrir
+                                        </button>
+                                    </a>
+
+                                    <!-- Delete Button -->
+                                    <a th:href="@{/tarefas/{id}/deletar-tarefa(id=${tarefa.id})}"
+                                       class="btn-action delete-btn">
+                                        <button type="button" class="btn btn-delete">
+                                            <i class="bi bi-trash"></i>
+                                            Excluir
+                                        </button>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Footer Section -->
+                <div class="app-footer">
+                    <img src="https://i.ytimg.com/vi/pka5crwZv4I/sddefault.jpg" alt="Ilustração de produtividade"
+                         class="decorative-img">
+                    <p class="footer-text">
+                        <i class="bi bi-lightbulb"></i>
+                        Organize suas tarefas e aumente sua produtividade
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- JavaScript Files -->
+<script th:src="@{/js/theme.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+
+<script>
+    // Edit sidebar placeholder functionality
+    function showEditPlaceholder() {
+        const editSidebar = document.getElementById('editSidebar');
+        const editOverlay = document.getElementById('editSidebarOverlay');
+
+        if (editSidebar && editOverlay) {
+            editSidebar.style.display = 'flex';
+            editOverlay.style.display = 'block';
+
+            // Add close functionality
+            const closeBtn = document.getElementById('editSidebarClose');
+            const cancelBtn = document.getElementById('cancelEdit');
+
+            const closeSidebar = () => {
+                editSidebar.style.display = 'none';
+                editOverlay.style.display = 'none';
+            };
+
+            if (closeBtn) closeBtn.onclick = closeSidebar;
+            if (cancelBtn) cancelBtn.onclick = closeSidebar;
+            editOverlay.onclick = closeSidebar;
         }
-    </script>
+    }
+</script>
 </body>
 
 </html>
