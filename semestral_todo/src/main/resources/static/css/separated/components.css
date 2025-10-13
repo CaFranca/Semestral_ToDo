@@ -1,0 +1,206 @@
+/* components.css */
+/* ======================
+   FORM ELEMENTS ENHANCEMENTS
+   ====================== */
+.form-container {
+  padding: 2rem;
+  position: relative;
+}
+
+.form-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.task-form,
+.filter-form {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text);
+  background-color: var(--surface);
+  background-clip: padding-box;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+  transform: translateY(-2px);
+}
+
+/* ======================
+   BUTTON ENHANCEMENTS
+   ====================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn-block {
+  display: flex;
+  width: 100%;
+}
+
+.btn-primary {
+  color: var(--white);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-color: transparent;
+  box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-hover), var(--primary));
+  box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  color: var(--white);
+  background: linear-gradient(135deg, var(--success), #3ab7e0);
+  border-color: transparent;
+  box-shadow: 0 4px 10px rgba(76, 201, 240, 0.3);
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, var(--success-hover), var(--success));
+  box-shadow: 0 6px 15px rgba(76, 201, 240, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-delete {
+  color: var(--white);
+  background: linear-gradient(135deg, var(--danger), #e01474);
+  border-color: transparent;
+  box-shadow: 0 4px 10px rgba(247, 37, 133, 0.3);
+}
+
+.btn-delete:hover {
+  background: linear-gradient(135deg, var(--danger-hover), var(--danger));
+  box-shadow: 0 6px 15px rgba(247, 37, 133, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  color: var(--white);
+  background: linear-gradient(135deg, var(--secondary), #5a0a94);
+  border-color: transparent;
+  box-shadow: 0 4px 10px rgba(114, 9, 183, 0.3);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, var(--secondary-hover), var(--secondary));
+  box-shadow: 0 6px 15px rgba(114, 9, 183, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* Theme toggle button enhancement */
+#theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--box-shadow);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+#theme-toggle:hover {
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: var(--box-shadow-hover);
+}
+
+#theme-icon {
+  font-size: 1.5rem;
+  transition: var(--transition);
+}
+
+/* Logout button enhancement */
+.logout-btn {
+  background: linear-gradient(135deg, var(--danger), #e01474);
+  border: none;
+  box-shadow: 0 4px 10px rgba(247, 37, 133, 0.3);
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, var(--danger-hover), var(--danger));
+  box-shadow: 0 6px 15px rgba(247, 37, 133, 0.4);
+  transform: translateY(-2px);
+}

@@ -50,6 +50,9 @@ dependencies {
 
 	implementation("org.springframework.boot:spring-boot-starter-security")
 
+	// Add email dependency - will work with console output if not configured
+	implementation("org.springframework.boot:spring-boot-starter-mail")
+
 
 	// Dependencia que fornece ferramentas de desenvolvimento para o Spring Boot
 	// Esta dependência inclui o Spring Boot DevTools, que oferece recursos como recarga automática
