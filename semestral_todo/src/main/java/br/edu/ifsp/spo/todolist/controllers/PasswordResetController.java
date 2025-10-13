@@ -29,18 +29,24 @@ public class PasswordResetController {
         boolean success;
         if ("token".equals(method)) {
             success = passwordResetService.generateResetToken(email);
+            if (success) {
+                redirectAttributes.addFlashAttribute("success",
+                        "Link de redefinição enviado para seu email. Verifique sua caixa de entrada.");
+                return "redirect:/forgot-password";
+            }
         } else {
             success = passwordResetService.generateResetKey(email);
+            if (success) {
+                redirectAttributes.addFlashAttribute("success",
+                        "Código de verificação enviado para seu email.");
+                // AUTO-REDIRECT to the code entry page with email pre-filled
+                return "redirect:/reset-password-key?email=" + email;
+            }
         }
 
-        if (success) {
-            redirectAttributes.addFlashAttribute("success",
-                    "Instruções de redefinição foram enviadas para seu email.");
-        } else {
-            redirectAttributes.addFlashAttribute("error",
-                    "Email não encontrado.");
+        if (!success) {
+            redirectAttributes.addFlashAttribute("error", "Email não encontrado.");
         }
-
         return "redirect:/forgot-password";
     }
 
@@ -76,7 +82,10 @@ public class PasswordResetController {
 
     // Show reset password with key form
     @GetMapping("/reset-password-key")
-    public String showResetPasswordKeyForm() {
+    public String showResetPasswordKeyForm(@RequestParam(required = false) String email, Model model) {
+        if (email != null) {
+            model.addAttribute("prefilledEmail", email);
+        }
         return "reset/reset-password-key"; // Updated path
     }
 
@@ -95,7 +104,8 @@ public class PasswordResetController {
             return "reset/reset-password-final"; // Updated path
         } else {
             redirectAttributes.addFlashAttribute("error", "Código inválido ou expirado.");
-            return "redirect:/reset-password-key";
+            // Return to the key entry page with the email pre-filled
+            return "redirect:/reset-password-key?email=" + email;
         }
     }
 
@@ -110,7 +120,7 @@ public class PasswordResetController {
 
         if (!password.equals(confirmPassword)) {
             redirectAttributes.addFlashAttribute("error", "As senhas não coincidem.");
-            return "redirect:/reset-password-key"; // Fixed redirect path
+            return "redirect:/reset-password-key?email=" + email;
         }
 
         boolean success = passwordResetService.resetPasswordWithKey(email, key, password);
@@ -119,7 +129,7 @@ public class PasswordResetController {
             return "redirect:/login";
         } else {
             redirectAttributes.addFlashAttribute("error", "Erro ao redefinir senha.");
-            return "redirect:/reset-password-key"; // Fixed redirect path
+            return "redirect:/reset-password-key?email=" + email;
         }
     }
 }
