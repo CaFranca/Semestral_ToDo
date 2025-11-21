@@ -32,6 +32,7 @@
 
         body {
             overflow-y: auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Adicionei fonte padrão */
         }
 
         .main-content {
@@ -45,11 +46,20 @@
             flex-direction: column;
         }
 
+        /* O segredo do alinhamento está aqui */
         .section-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Joga um pra esquerda, outro pra direita */
             align-items: center;
             width: 100%;
+            margin-bottom: 1rem; /* Espaço abaixo do título */
+        }
+
+        /* Classe nova para manter ícone e título juntos */
+        .header-title-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* Espaço entre ícone e texto */
         }
 
         /* Task Actions */
@@ -204,7 +214,7 @@
         </div>
     </aside>
 
-    <!-- Edit Sidebar (Placeholder) -->
+    <!-- Edit Sidebar -->
     <aside class="edit-sidebar" id="editSidebar" style="display: none;">
         <div class="edit-sidebar-header">
             <h3>
@@ -217,15 +227,12 @@
         </div>
 
         <div class="edit-sidebar-content">
-            <!-- Task Preview -->
             <div id="taskPreview" class="task-preview">
                 <div class="task-title">Funcionalidade de edição em desenvolvimento</div>
                 <div class="task-details">
                     <span class="status-badge status-pending">Em breve</span>
                 </div>
             </div>
-
-            <!-- Edit Form Placeholder -->
             <div class="edit-form-placeholder">
                 <div class="placeholder-message">
                     <i class="bi bi-tools"
@@ -234,8 +241,6 @@
                     <p>A edição de tarefas estará disponível em breve!</p>
                 </div>
             </div>
-
-            <!-- Edit Actions -->
             <div class="edit-sidebar-actions">
                 <button type="button" class="btn btn-secondary" id="cancelEdit">
                     <i class="bi bi-x-circle"></i>
@@ -253,40 +258,35 @@
     <main class="main-content" id="main">
         <div class="main-container">
             <div class="task-app-container large">
-                <!-- Header Section -->
-                <div class="app-header">
-                    <div class="header-content">
+
+                <!-- Título Principal (Taskzz) -->
+                <div class="app-header" style="margin-bottom: 2rem; text-align: center;">
+                    <div class="header-content" style="justify-content: center;">
                         <div class="header-title">
                             <h1 class="app-title medium">
                                 <i class="bi bi-check2-square"></i>
                                 Taskzz
                             </h1>
-                            <p class="app-subtitle">
-                                Sistema de gerenciamento de tarefas para a disciplina SPOLBP2
-                            </p>
-                        </div>
-
-                        <div class="header-actions">
-                            <button class="btn btn-outline sidebar-toggle-desktop" id="sidebarToggleDesktop">
-                                <i class="bi bi-funnel"></i>
-                                Filtros
-                            </button>
-
-                            <button id="theme-toggle" class="btn btn-secondary" aria-label="Alternar tema">
-                                    <span id="theme-icon" class="theme-icon">
-                                        <i class="bi bi-moon"></i>
-                                    </span>
-                            </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Add Task Section -->
+                <!-- Add Task Section (AQUI ESTÁ A MUDANÇA) -->
                 <div class="form-section">
                     <div class="section-header">
-                        <i class="bi bi-plus-circle"></i>
-                        <h2>Nova Tarefa</h2>
+                        <!-- Esquerda: Ícone + Texto Agrupados -->
+                        <div class="header-title-group">
+                            <i class="bi bi-plus-circle"></i>
+                            <h2>Nova Tarefa</h2>
+                        </div>
+
+                        <!-- Direita: Botão de Filtros (Movido para cá) -->
+                        <button class="btn btn-outline sidebar-toggle-desktop" id="sidebarToggleDesktop">
+                            <i class="bi bi-funnel"></i>
+                            Filtros
+                        </button>
                     </div>
+
                     <div class="form-container p-3 mb-3">
                         <form th:action="@{/tarefas}" th:object="${tarefaForm}" method="post" class="task-form">
                             <!-- Task Description -->
@@ -388,7 +388,6 @@
                                     </div>
 
                                     <div class="task-details">
-                                        <!-- Status Badge -->
                                         <span class="status-badge"
                                               th:class="${'status-badge ' + (tarefa.status.name() == 'PENDENTE' ? 'status-pending' :
                                                            tarefa.status.name() == 'FAZENDO' ? 'status-doing' : 'status-completed')}">
@@ -398,13 +397,11 @@
                                                 <span th:text="${tarefa.status.name()}"></span>
                                             </span>
 
-                                        <!-- Due Date -->
                                         <span class="due-date" th:if="${tarefa.dataVencimento}">
                                                 <i class="bi bi-calendar-event"></i>
                                                 <span th:text="${#temporals.format(tarefa.dataVencimento, 'dd/MM/yyyy')}"></span>
                                             </span>
 
-                                        <!-- Tags -->
                                         <div th:if="${tarefa.tags != null and !tarefa.tags.empty}" class="task-tags">
                                                 <span th:each="tag : ${tarefa.tags}" class="tag">
                                                     <i class="bi bi-tag"></i>
@@ -416,14 +413,12 @@
 
                                 <!-- Task Actions -->
                                 <div class="task-actions">
-                                    <!-- Edit Button -->
                                     <button type="button" class="btn btn-primary edit-btn-placeholder"
                                             onclick="showEditPlaceholder()">
                                         <i class="bi bi-pencil"></i>
                                         Editar
                                     </button>
 
-                                    <!-- Complete/Reopen Buttons -->
                                     <a th:if="${tarefa.status.name() != 'CONCLUIDA'}"
                                        th:href="@{/tarefas/{id}/marcar-como/CONCLUIDA(id=${tarefa.id})}"
                                        class="btn-action complete-btn">
@@ -441,7 +436,6 @@
                                         </button>
                                     </a>
 
-                                    <!-- Delete Button -->
                                     <a th:href="@{/tarefas/{id}/deletar-tarefa(id=${tarefa.id})}"
                                        class="btn-action delete-btn">
                                         <button type="button" class="btn btn-delete">
@@ -454,44 +448,33 @@
                         </ul>
                     </div>
                 </div>
-
-                <!-- Footer Section -->
-                <div class="app-footer">
-                    <img src="https://i.ytimg.com/vi/pka5crwZv4I/sddefault.jpg" alt="Ilustração de produtividade"
-                         class="decorative-img">
-                    <p class="footer-text">
-                        <i class="bi bi-lightbulb"></i>
-                        Organize suas tarefas e aumente sua produtividade
-                    </p>
-                </div>
             </div>
         </div>
     </main>
 </div>
 
-<!-- JavaScript Files -->
-<script th:src="@{/js/theme.js}"></script>
+<button id="theme-toggle" class="btn btn-secondary" aria-label="Alternar tema">
+    <span id="theme-icon" class="theme-icon">
+        <i class="bi bi-moon"></i>
+    </span>
+</button>
+
+<script th:src="@{/js/theme.txt}"></script>
 <script th:src="@{/js/sidebar.js}"></script>
 
 <script>
-    // Edit sidebar placeholder functionality
     function showEditPlaceholder() {
         const editSidebar = document.getElementById('editSidebar');
         const editOverlay = document.getElementById('editSidebarOverlay');
-
         if (editSidebar && editOverlay) {
             editSidebar.style.display = 'flex';
             editOverlay.style.display = 'block';
-
-            // Add close functionality
             const closeBtn = document.getElementById('editSidebarClose');
             const cancelBtn = document.getElementById('cancelEdit');
-
             const closeSidebar = () => {
                 editSidebar.style.display = 'none';
                 editOverlay.style.display = 'none';
             };
-
             if (closeBtn) closeBtn.onclick = closeSidebar;
             if (cancelBtn) cancelBtn.onclick = closeSidebar;
             editOverlay.onclick = closeSidebar;
@@ -499,5 +482,4 @@
     }
 </script>
 </body>
-
 </html>

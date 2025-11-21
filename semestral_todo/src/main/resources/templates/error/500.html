@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Erro Interno - Taskzz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fee2e2; /* Fundo avermelhado suave */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #374151;
+    }
+    .error-container {
+      text-align: center;
+      background: white;
+      padding: 3rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 90%;
+      border-top: 6px solid #ef4444;
+    }
+    h1 {
+      font-size: 4rem;
+      margin: 0;
+      color: #ef4444; /* Vermelho */
+      line-height: 1;
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+    .error-details {
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #ef4444;
+      margin-bottom: 2rem;
+      text-align: left;
+      overflow-x: auto;
+    }
+    .btn {
+      display: inline-block;
+      background-color: #374151;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      text-decoration: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+    }
+    .btn:hover {
+      background-color: #1f2937;
+    }
+  </style>
+</head>
+<body>
+<div class="error-container">
+  <h1>500</h1>
+  <h2>Algo deu errado</h2>
+  <p>Ocorreu um erro inesperado no nosso servidor. Nossa equipe já foi notificada (mentira, é só você mesmo).</p>
+
+  <!-- Detalhes técnicos (Opcional: mostre apenas se quiser) -->
+  <div class="error-details">
+    <strong>Status:</strong> <span th:text="${status}">500</span><br>
+    <strong>Erro:</strong> <span th:text="${error}">Internal Server Error</span><br>
+    <!-- Mostra a mensagem apenas se ela existir -->
+    <span th:if="${message}">
+                <strong>Mensagem:</strong> <span th:text="${message}">Detalhe do erro...</span>
+            </span>
+  </div>
+
+  <a href="/" class="btn">Tentar Novamente</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Requisição Inválida - Taskzz</title>
+  <style>
+    body {
+      font-family: sans-serif; background-color: #fffbeb; color: #78350f;
+      display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;
+    }
+    .container {
+      text-align: center; background: white; padding: 3rem; border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 500px;
+      border-top: 6px solid #f59e0b;
+    }
+    h1 { font-size: 4rem; margin: 0; color: #f59e0b; }
+    .btn {
+      background: #f59e0b; color: white; padding: 10px 20px; text-decoration: none;
+      border-radius: 5px; display: inline-block; margin-top: 20px;
+    }
+    .btn:hover { background: #d97706; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>400</h1>
+  <h2>Requisição Inválida</h2>
+  <p>O servidor não entendeu o que você enviou. Verifique se preencheu todos os campos corretamente.</p>
+  <a href="javascript:history.back()" class="btn">Voltar e Corrigir</a>
+</div>
+</body>
+</html>
