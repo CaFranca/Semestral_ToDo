@@ -124,9 +124,8 @@ class SidebarManager {
     }
 
     resetFilterForm() {
-        const form = document.querySelector('.filter-form');
-        form?.reset();
-        console.log('[Sidebar] Filters reset');
+        const baseUrl = window.location.pathname;
+                window.location.href = baseUrl;
     }
 
     dispatchEvent(eventName) {
