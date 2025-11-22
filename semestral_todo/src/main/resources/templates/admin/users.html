@@ -43,10 +43,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a th:href="@{/logout}" class="nav-link text-danger">
-                        <i class="bi bi-box-arrow-right"></i>
-                        Sair
-                    </a>
+                    <form th:action="@{/logout}" method="post" style="width: 100%;">
+                        <button type="submit" class="nav-link text-danger logout-btn">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Sair
+                        </button>
+                    </form>
                 </li>
             </ul>
         </div>
@@ -56,27 +58,25 @@
         <div class="admin-header">
             <div class="header-content">
                 <button class="sidebar-toggle-desktop" id="admin-sidebar-toggle">
-                    <i class="bi bi-list"></i>
-                    <span>Menu</span>
+                    <h3>
+                        <i class="bi bi-list"></i>
+                        Menu
+                    </h3>
                 </button>
-                <div class="header-title">
-                    <h1>Gerenciar Usuários</h1>
-                    <p>Visualize e gerencie todos os usuários do sistema</p>
-                </div>
+                <h2 class="app-title medium">Gerenciar Usuários</h2>
             </div>
         </div>
 
-        <!-- Flash messages -->
-        <div th:if="${success}" class="success-message mb-3 task-item">
+        <div th:if="${success}" class="success-message mb-3">
             <i class="bi bi-check-circle"></i>
             <span th:text="${success}"></span>
         </div>
-        <div th:if="${error}" class="error-message mb-3 task-item">
+        <div th:if="${error}" class="error-message mb-3">
             <i class="bi bi-exclamation-triangle"></i>
             <span th:text="${error}"></span>
         </div>
 
-        <div class="admin-content task-app-container">
+        <div class="admin-content">
             <div class="table-container">
                 <table class="admin-table">
                     <thead>
@@ -90,31 +90,37 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="user : ${users}" class="task-item">
+                    <tr th:each="user : ${users}">
                         <td th:text="${user.id}"></td>
                         <td th:text="${user.name}"></td>
                         <td th:text="${user.email}"></td>
                         <td>
-                                    <span th:class="${user.role == 'ADMIN' ? 'badge admin' : 'badge user'}"
-                                          th:text="${user.role}">
-                                    </span>
+                            <span th:class="${user.role == 'ADMIN' ? 'badge admin' : 'badge user'}"
+                                  th:text="${user.role}">
+                            </span>
                         </td>
                         <td th:text="${#temporals.format(user.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+
                         <td class="actions">
                             <a th:href="@{/admin/users/edit/{id}(id=${user.id})}"
-                               class="btn btn-sm btn-primary" title="Editar">
+                               class="btn btn-primary" title="Editar">
                                 <i class="bi bi-pencil"></i>
+                                Editar
                             </a>
+
                             <a th:href="@{/admin/users/{id}/tarefas(id=${user.id})}"
-                               class="btn btn-sm btn-info" title="Ver Tarefas">
+                               class="btn btn-info" title="Ver Tarefas">
                                 <i class="bi bi-list-task"></i>
+                                Tarefas
                             </a>
+
                             <form th:action="@{/admin/users/delete/{id}(id=${user.id})}"
                                   method="post" class="d-inline">
-                                <button type="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Tem certeza que deseja deletar este usuário?')"
-                                        title="Deletar">
+                                <button type="submit" class="btn btn-delete"
+                                        onclick="return confirm('Tem certeza que deseja excluir este usuário?')"
+                                        title="Excluir">
                                     <i class="bi bi-trash"></i>
+                                    Excluir
                                 </button>
                             </form>
                         </td>
@@ -131,17 +137,14 @@
         </div>
     </main>
 
-    <!-- Mobile Sidebar Toggle -->
     <button class="sidebar-toggle-mobile" id="admin-sidebar-toggle-mobile">
         <i class="bi bi-list"></i>
     </button>
 
-    <!-- Overlay -->
     <div class="sidebar-overlay" id="admin-sidebar-overlay"></div>
 </div>
 
 <script>
-    // Reuse the same sidebar functionality from dashboard
     document.addEventListener('DOMContentLoaded', function() {
         const sidebar = document.querySelector('.admin-sidebar');
         const sidebarToggle = document.getElementById('admin-sidebar-toggle');
@@ -175,7 +178,7 @@
 </script>
 
 <style>
-    /* Reuse the same admin layout styles from dashboard */
+    /* --- LAYOUT GERAL --- */
     .admin-layout {
         display: flex;
         min-height: 100vh;
@@ -183,6 +186,15 @@
         position: relative;
     }
 
+    .admin-main {
+        flex: 1;
+        padding: 2rem;
+        background: var(--background);
+        min-height: 100vh;
+        transition: margin-left 0.3s ease;
+    }
+
+    /* --- SIDEBAR --- */
     .admin-sidebar {
         position: fixed;
         top: 0;
@@ -253,35 +265,53 @@
         margin-bottom: 0.5rem;
     }
 
+    /* ESTILOS DA SIDEBAR (LINKS E BOTÕES) */
     .admin-sidebar .nav-link {
         display: flex;
         align-items: center;
         padding: 1rem;
-        color: var(--text);
+        color: #333 !important; /* Cor escura padrão para visibilidade */
         text-decoration: none;
         border-radius: var(--border-radius-sm);
         transition: var(--transition);
         gap: 0.75rem;
+
+        /* Reset de propriedades de botão */
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 1rem;
+
+        /* REMOVE A SOMBRA E CONTORNO */
+        box-shadow: none !important;
+        outline: none !important;
     }
 
     .admin-sidebar .nav-link:hover {
-        background: var(--light-bg);
+        background: #f8f9fa;
+        color: #000 !important;
         transform: translateX(5px);
     }
 
     .admin-sidebar .nav-item.active .nav-link {
         background: var(--primary);
-        color: white;
+        color: white !important;
     }
 
-    .admin-main {
-        flex: 1;
-        padding: 2rem;
-        background: var(--background);
-        min-height: 100vh;
-        transition: margin-left 0.3s ease;
+    /* Botão Sair */
+    .admin-sidebar .nav-link.text-danger {
+        color: var(--danger) !important;
     }
 
+    .admin-sidebar .nav-link.text-danger:hover {
+        color: #bb2d3b !important;
+        background: #fff5f5;
+    }
+
+    /* --- HEADER & TÍTULOS --- */
     .admin-header {
         margin-bottom: 2rem;
     }
@@ -290,6 +320,9 @@
         display: flex;
         align-items: center;
         gap: 1rem;
+        justify-content: center;
+        position: relative;
+        width: 100%;
     }
 
     .sidebar-toggle-desktop {
@@ -300,28 +333,26 @@
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--border-radius-sm);
-        color: var(--text);
+        color: #333;
         cursor: pointer;
         transition: var(--transition);
+        position: absolute;
+        left: 0;
+        z-index: 10;
     }
 
     .sidebar-toggle-desktop:hover {
-        background: var(--light-bg);
-        transform: translateY(-2px);
+        box-shadow: var(--box-shadow-hover);
     }
 
-    .header-title h1 {
+    .header-title h1, .app-title {
         margin: 0 0 0.5rem 0;
         color: var(--text);
         font-size: 2rem;
         font-weight: 700;
     }
 
-    .header-title p {
-        margin: 0;
-        color: var(--text-secondary);
-    }
-
+    /* --- CONTEÚDO E TABELA --- */
     .admin-content {
         background: var(--surface);
         border-radius: var(--border-radius);
@@ -345,6 +376,7 @@
         padding: 1rem;
         text-align: left;
         border-bottom: 1px solid var(--border);
+        vertical-align: middle;
     }
 
     .admin-table th {
@@ -359,36 +391,91 @@
         background: var(--light-bg);
     }
 
+    /* --- BADGES --- */
     .badge {
         padding: 0.25rem 0.75rem;
         border-radius: 50px;
         font-size: 0.75rem;
         font-weight: 600;
         color: white;
+        display: inline-block;
     }
 
-    .badge.admin {
-        background: var(--danger);
-    }
+    .badge.admin { background: var(--danger); }
+    .badge.user { background: var(--success); }
 
-    .badge.user {
-        background: var(--success);
-    }
+    /* --- BOTÕES DA TABELA --- */
 
     .actions {
         display: flex;
         gap: 0.5rem;
+        align-items: center;
+        flex-wrap: wrap;
     }
 
-    .btn-sm {
-        padding: 0.5rem 0.75rem;
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        line-height: 1;
+        vertical-align: middle;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: var(--border-radius-sm, 4px);
+        font-size: 0.9rem;
+        transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .btn i {
+        display: flex;
+        align-items: center;
+        font-size: 1.1em;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    /* Cores dos Botões */
+    .btn-primary {
+        background-color: var(--primary, #0d6efd);
+        color: white;
+    }
+    .btn-primary:hover {
+        background-color: var(--primary-dark, #0b5ed7);
+    }
+
+    /* Botão INFO (Tarefas) */
+    .btn-info {
+        background-color: #17a2b8;
+        color: white !important;
+    }
+    .btn-info:hover {
+        background-color: #138496;
+        color: white !important;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+    }
+    .btn-delete:hover {
+        background-color: #bb2d3b;
+        color: white;
+    }
+
+    /* Ajuste de tamanho na tabela */
+    .admin-table .btn {
+        padding: 0.4rem 0.8rem;
         font-size: 0.875rem;
-        border-radius: var(--border-radius-sm);
     }
 
-    .success-message {
-        background: linear-gradient(135deg, var(--success), #3ab7e0);
-        color: white;
+    /* --- MENSAGENS E EMPTY STATE --- */
+    .success-message, .error-message {
         border-radius: var(--border-radius-sm);
         text-align: center;
         font-weight: 600;
@@ -398,21 +485,12 @@
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
+        margin-bottom: 1rem;
+        color: white;
     }
 
-    .error-message {
-        background: linear-gradient(135deg, var(--danger), #e01474);
-        color: white;
-        border-radius: var(--border-radius-sm);
-        text-align: center;
-        font-weight: 600;
-        box-shadow: var(--box-shadow);
-        padding: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-    }
+    .success-message { background: linear-gradient(135deg, var(--success), #3ab7e0); }
+    .error-message { background: linear-gradient(135deg, var(--danger), #e01474); }
 
     .empty-state {
         text-align: center;
@@ -424,18 +502,12 @@
         font-size: 4rem;
         margin-bottom: 1rem;
         color: var(--border);
+        display: block;
     }
 
-    .empty-state h3 {
-        margin: 0 0 0.5rem 0;
-        color: var(--text);
-    }
+    .text-danger { color: var(--danger) !important; }
 
-    .text-danger {
-        color: var(--danger) !important;
-    }
-
-    /* Mobile Sidebar Toggle */
+    /* --- MOBILE & OVERLAYS --- */
     .sidebar-toggle-mobile {
         display: none;
         position: fixed;
@@ -456,11 +528,8 @@
         font-size: 1.25rem;
     }
 
-    .sidebar-toggle-mobile:hover {
-        transform: scale(1.1);
-    }
+    .sidebar-toggle-mobile:hover { transform: scale(1.1); }
 
-    /* Overlay */
     .sidebar-overlay {
         position: fixed;
         top: 0;
@@ -479,64 +548,41 @@
         visibility: visible;
     }
 
-    /* Responsive Design */
     @media (max-width: 768px) {
-        .admin-sidebar {
-            width: 85%;
-            max-width: 300px;
-            left: -100%;
-        }
-
-        .admin-sidebar.open {
-            left: 0;
-        }
-
-        .sidebar-toggle-mobile {
-            display: flex;
-        }
-
-        .admin-main {
-            padding: 1rem;
-        }
+        .admin-sidebar { width: 85%; max-width: 300px; left: -100%; }
+        .admin-sidebar.open { left: 0; }
+        .sidebar-toggle-mobile { display: flex; }
+        .admin-main { padding: 1rem; }
 
         .header-content {
             flex-direction: column;
-            align-items: flex-start;
+            align-items: center;
             gap: 1rem;
         }
 
-        .header-title h1 {
-            font-size: 1.5rem;
+        .sidebar-toggle-desktop {
+            position: static;
+            width: 100%;
+            justify-content: center;
         }
 
-        .admin-table {
-            font-size: 0.875rem;
-        }
+        .header-title h1 { font-size: 1.5rem; text-align: center; }
+        .admin-table { font-size: 0.875rem; }
 
-        .actions {
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .btn-sm {
-            padding: 0.375rem 0.5rem;
-            font-size: 0.75rem;
-        }
+        .actions { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+        .admin-table .btn { width: 100%; justify-content: center; }
     }
 
-    /* Animation for sidebar content */
+    /* Animações Sidebar */
     .admin-sidebar .sidebar-content > * {
         opacity: 0;
         transform: translateX(-20px);
         transition: all 0.3s ease;
     }
-
     .admin-sidebar.open .sidebar-content > * {
         opacity: 1;
         transform: translateX(0);
     }
-
-    /* Stagger animation for sidebar items */
     .admin-sidebar .sidebar-content > *:nth-child(1) { transition-delay: 0.1s; }
     .admin-sidebar .sidebar-content > *:nth-child(2) { transition-delay: 0.15s; }
     .admin-sidebar .sidebar-content > *:nth-child(3) { transition-delay: 0.2s; }
