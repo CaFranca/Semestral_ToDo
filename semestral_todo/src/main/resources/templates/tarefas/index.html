@@ -329,10 +329,9 @@
                                     </label>
                                     <div class="input-with-icon">
                                         <input type="text" th:field="*{tagsString}" class="form-control"
-                                               placeholder="trabalho, urgente, pessoal" />
+                                               placeholder="Ex: trabalho, urgente, pessoal" />
                                         <i class="bi bi-tag input-icon"></i>
                                     </div>
-                                    <small class="form-hint">Separe por vírgula</small>
                                 </div>
                             </div>
 
@@ -350,8 +349,7 @@
                     <div class="section-header">
                         <div class="tasks-header-left">
                             <i class="bi bi-list-task"></i>
-                            <h2>Minhas Tarefas</h2>
-                            <span class="task-count" th:text="'(' + ${tarefas.size()} + ')'"></span>
+                            <h2>Minhas Tarefas <span class="task-count" th:text="'(' + ${tarefas.size()} + ')'"></span> </h2>
                         </div>
 
                         <!-- Logout Form -->

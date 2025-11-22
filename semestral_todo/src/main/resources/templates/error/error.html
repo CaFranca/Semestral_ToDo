@@ -74,15 +74,6 @@
 
   <p>Não foi possível processar sua solicitação corretamente.</p>
 
-  <div class="tech-details">
-    <strong>Erro:</strong> <span th:text="${error}">Desconhecido</span><br>
-    <!-- Mostra a mensagem técnica se houver -->
-    <span th:if="${message} and ${message} != 'No message available'">
-                <strong>Detalhe:</strong> <span th:text="${message}"></span><br>
-            </span>
-    <strong>Caminho:</strong> <span th:text="${path}">/</span>
-  </div>
-
   <a href="/" class="btn">Voltar para o Início</a>
 </div>
 </body>

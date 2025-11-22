@@ -71,17 +71,7 @@
 <div class="error-container">
   <h1>500</h1>
   <h2>Algo deu errado</h2>
-  <p>Ocorreu um erro inesperado no nosso servidor. Nossa equipe já foi notificada (mentira, é só você mesmo).</p>
-
-  <!-- Detalhes técnicos (Opcional: mostre apenas se quiser) -->
-  <div class="error-details">
-    <strong>Status:</strong> <span th:text="${status}">500</span><br>
-    <strong>Erro:</strong> <span th:text="${error}">Internal Server Error</span><br>
-    <!-- Mostra a mensagem apenas se ela existir -->
-    <span th:if="${message}">
-                <strong>Mensagem:</strong> <span th:text="${message}">Detalhe do erro...</span>
-            </span>
-  </div>
+  <p>Ocorreu um erro inesperado no nosso servidor.</p>
 
   <a href="/" class="btn">Tentar Novamente</a>
 </div>

@@ -43,10 +43,12 @@
           </a>
         </li>
         <li class="nav-item">
-          <a th:href="@{/logout}" class="nav-link text-danger">
-            <i class="bi bi-box-arrow-right"></i>
-            Sair
-          </a>
+          <form th:action="@{/logout}" method="post" style="width: 100%;">
+            <button type="submit" class="nav-link text-danger logout-btn">
+              <i class="bi bi-box-arrow-right"></i>
+              Sair
+            </button>
+          </form>
         </li>
       </ul>
     </div>
@@ -56,124 +58,409 @@
     <div class="admin-header">
       <div class="header-content">
         <button class="sidebar-toggle-desktop" id="admin-sidebar-toggle">
-          <i class="bi bi-list"></i>
-          <span>Menu</span>
+          <h3><i class="bi bi-list"></i> Menu</h3>
         </button>
-        <div class="header-title">
-          <h1>Editar Usuário</h1>
-          <p>Modifique as informações do usuário</p>
-        </div>
+        <div class="header-title"></div>
       </div>
     </div>
 
-    <div class="admin-content task-app-container">
-      <form th:action="@{/admin/users/update/{id}(id=${user.id})}" method="post" class="task-form">
-        <div class="form-group">
-          <label for="name" class="form-label">
-            <i class="bi bi-person"></i>
-            Nome:
-          </label>
-          <div class="input-with-icon">
-            <input type="text" id="name" name="name" class="form-control"
-                   th:value="${user.name}" required />
-            <i class="bi bi-person input-icon"></i>
-          </div>
+    <div class="form-wrapper-centered">
+      <div class="task-app-container small">
+
+        <div class="header-title-group">
+          <i class="bi bi-person-gear" style="font-size: 1.5rem; color: var(--primary);"></i>
+          <h2>Editar Usuário</h2>
         </div>
 
-        <div class="form-group">
-          <label for="email" class="form-label">
-            <i class="bi bi-envelope"></i>
-            Email:
-          </label>
-          <div class="input-with-icon">
-            <input type="email" id="email" name="email" class="form-control"
-                   th:value="${user.email}" required />
-            <i class="bi bi-at input-icon"></i>
-          </div>
-        </div>
+        <form th:action="@{/admin/users/update/{id}(id=${user.id})}" method="post" class="task-form">
 
-        <div class="form-group">
-          <label for="password" class="form-label">
-            <i class="bi bi-lock"></i>
-            Nova Senha:
-          </label>
-          <div class="input-with-icon">
-            <input type="password" id="password" name="password" class="form-control"
-                   placeholder="Deixe em branco para manter a senha atual" />
-            <i class="bi bi-key input-icon"></i>
+          <div class="form-group mb-3">
+            <label class="form-label">Nome:</label>
+            <div class="input-with-icon">
+              <input type="text" name="name" class="form-control"
+                     th:value="${user.name}" required />
+              <i class="bi bi-person input-icon"></i>
+            </div>
           </div>
-          <small class="form-text">Deixe em branco para manter a senha atual</small>
-        </div>
 
-        <div class="form-group">
-          <label for="role" class="form-label">
-            <i class="bi bi-shield"></i>
-            Função:
-          </label>
-          <div class="input-with-icon">
-            <select id="role" name="role" class="form-control" required>
-              <option value="USER" th:selected="${user.role == 'USER'}">Usuário</option>
-              <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">Administrador</option>
-            </select>
-            <i class="bi bi-shield input-icon"></i>
+          <div class="form-group mb-3">
+            <label class="form-label">Email:</label>
+            <div class="input-with-icon">
+              <input type="email" name="email" class="form-control"
+                     th:value="${user.email}" required />
+              <i class="bi bi-envelope input-icon"></i>
+            </div>
           </div>
-        </div>
 
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">
-            <i class="bi bi-check-circle"></i>
-            Atualizar Usuário
-          </button>
-          <a th:href="@{/admin/users}" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i>
-            Cancelar
-          </a>
-        </div>
-      </form>
+          <div class="form-group mb-3">
+            <label class="form-label">Nova Senha:</label>
+            <div class="input-with-icon">
+              <input type="password" name="password" class="form-control"
+                     placeholder="Deixe em branco para manter a atual" />
+              <i class="bi bi-key input-icon"></i>
+            </div>
+            <small style="color: var(--text-secondary); font-size: 0.85rem; display: block; margin-top: 0.25rem;">
+              Preencha apenas se desejar alterar a senha.
+            </small>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-label">Função:</label>
+            <div class="input-with-icon">
+              <select name="role" class="form-control" style="padding-left: 2.5rem;" required>
+                <option value="USER" th:selected="${user.role == 'USER'}">Usuário</option>
+                <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">Administrador</option>
+              </select>
+              <i class="bi bi-shield-lock input-icon"></i>
+            </div>
+          </div>
+
+          <div class="btn-group-actions">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-lg"></i>
+              Salvar
+            </button>
+
+            <a th:href="@{/admin/users}" class="btn btn-secondary" style="text-decoration: none;">
+              <i class="bi bi-x-lg"></i>
+              Cancelar
+            </a>
+          </div>
+
+        </form>
+      </div>
     </div>
   </main>
 
-  <!-- Mobile Sidebar Toggle -->
   <button class="sidebar-toggle-mobile" id="admin-sidebar-toggle-mobile">
     <i class="bi bi-list"></i>
   </button>
 
-  <!-- Overlay -->
   <div class="sidebar-overlay" id="admin-sidebar-overlay"></div>
 </div>
 
 <script>
-  // Same sidebar functionality
   document.addEventListener('DOMContentLoaded', function() {
-      const sidebar = document.querySelector('.admin-sidebar');
-      const sidebarToggle = document.getElementById('admin-sidebar-toggle');
-      const sidebarToggleMobile = document.getElementById('admin-sidebar-toggle-mobile');
-      const sidebarClose = document.getElementById('admin-sidebar-close');
-      const overlay = document.getElementById('admin-sidebar-overlay');
+    const sidebar = document.querySelector('.admin-sidebar');
+    const sidebarToggle = document.getElementById('admin-sidebar-toggle');
+    const sidebarToggleMobile = document.getElementById('admin-sidebar-toggle-mobile');
+    const sidebarClose = document.getElementById('admin-sidebar-close');
+    const overlay = document.getElementById('admin-sidebar-overlay');
 
-      function openSidebar() {
-          sidebar.classList.add('open');
-          overlay.classList.add('active');
-          document.body.classList.add('sidebar-open');
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('active');
+      document.body.classList.add('sidebar-open');
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+      document.body.classList.remove('sidebar-open');
+    }
+
+    sidebarToggle?.addEventListener('click', openSidebar);
+    sidebarToggleMobile?.addEventListener('click', openSidebar);
+    sidebarClose?.addEventListener('click', closeSidebar);
+    overlay?.addEventListener('click', closeSidebar);
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeSidebar();
       }
-
-      function closeSidebar() {
-          sidebar.classList.remove('open');
-          overlay.classList.remove('active');
-          document.body.classList.remove('sidebar-open');
-      }
-
-      sidebarToggle?.addEventListener('click', openSidebar);
-      sidebarToggleMobile?.addEventListener('click', openSidebar);
-      sidebarClose?.addEventListener('click', closeSidebar);
-      overlay?.addEventListener('click', closeSidebar);
-
-      document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape') {
-              closeSidebar();
-          }
-      });
+    });
   });
 </script>
+
+<style>
+  /* --- LAYOUT GERAL --- */
+  .admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--background);
+    position: relative;
+  }
+
+  .admin-main {
+    flex: 1;
+    padding: 2rem;
+    background: var(--background, #f5f7fa);
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* --- SIDEBAR --- */
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 320px;
+    height: 100vh;
+    background: var(--surface);
+    box-shadow: var(--box-shadow);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .admin-sidebar.open { left: 0; }
+
+  .admin-sidebar .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--primary);
+    color: white;
+  }
+
+  .admin-sidebar .sidebar-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .admin-sidebar .sidebar-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition);
+  }
+
+  .admin-sidebar .sidebar-content {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+
+  .admin-sidebar .sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .admin-sidebar .nav-item { margin-bottom: 0.5rem; }
+
+  .admin-sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    color: #333 !important;
+    text-decoration: none;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition);
+    gap: 0.75rem;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  .admin-sidebar .nav-link:hover {
+    background: #f8f9fa;
+    color: #000 !important;
+    transform: translateX(5px);
+  }
+
+  .admin-sidebar .nav-item.active .nav-link {
+    background: var(--primary);
+    color: white !important;
+  }
+
+  .admin-sidebar .nav-link.text-danger { color: var(--danger) !important; }
+  .admin-sidebar .nav-link.text-danger:hover { color: #bb2d3b !important; background: #fff5f5; }
+
+  /* --- HEADER DO ADMIN --- */
+  .admin-header { margin-bottom: 1rem; }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    min-height: 50px;
+  }
+
+  /* BOTÃO MENU - SEM HOVER ANIMADO */
+  .sidebar-toggle-desktop {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-sm);
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    position: absolute;
+    left: 0;
+    z-index: 10;
+  }
+
+  .sidebar-toggle-desktop:hover {
+    background-color: #e9ecef;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .sidebar-toggle-desktop h3 { margin: 0; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+
+  /* --- FORMULÁRIO CENTRALIZADO --- */
+  .form-wrapper-centered {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 2rem;
+    width: 100%;
+  }
+
+  .task-app-container {
+    width: 100%;
+    background: var(--surface, #fff);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 2rem;
+  }
+
+  .task-app-container.small {
+    max-width: 32rem;
+  }
+
+  .header-title-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .header-title-group h2 { margin: 0; color: var(--text); }
+
+  .form-group { margin-bottom: 1rem; }
+  .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+
+  .input-with-icon {
+    position: relative;
+    width: 100%;
+  }
+
+  .input-with-icon .form-control {
+    padding-left: 2.5rem;
+    height: 45px;
+    border: 1px solid #ced4da;
+    border-radius: var(--border-radius-sm);
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary, #4361ee);
+    opacity: 0.7;
+    font-size: 1.1rem;
+  }
+
+  /* --- BOTÕES DE AÇÃO --- */
+  .btn-group-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .btn-group-actions .btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+  /* BOTÃO CANCELAR ROSA */
+  .btn-secondary {
+    background: #e83e8c;
+    color: white;
+  }
+  .btn-secondary:hover {
+    background: #c91e6e;
+    transform: translateY(-2px);
+  }
+
+  /* --- MOBILE --- */
+  .sidebar-toggle-mobile {
+    display: none;
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 100;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0; visibility: hidden;
+    transition: var(--transition);
+  }
+  .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+  @media (max-width: 768px) {
+    .admin-sidebar { width: 85%; max-width: 300px; left: -100%; }
+    .admin-sidebar.open { left: 0; }
+    .sidebar-toggle-mobile { display: flex; }
+    .admin-main { padding: 1rem; }
+    .sidebar-toggle-desktop { position: static; width: 100%; justify-content: center; }
+
+    .form-wrapper-centered { padding-top: 0; align-items: center; }
+    .header-content { justify-content: center; margin-bottom: 1rem; }
+  }
+
+  /* Animações Sidebar */
+  .admin-sidebar .sidebar-content > * { opacity: 0; transform: translateX(-20px); transition: all 0.3s ease; }
+  .admin-sidebar.open .sidebar-content > * { opacity: 1; transform: translateX(0); }
+  .admin-sidebar .sidebar-content > *:nth-child(1) { transition-delay: 0.1s; }
+  .admin-sidebar .sidebar-content > *:nth-child(2) { transition-delay: 0.15s; }
+  .admin-sidebar .sidebar-content > *:nth-child(3) { transition-delay: 0.2s; }
+</style>
 </body>
 </html>
