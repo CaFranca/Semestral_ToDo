@@ -42,11 +42,11 @@ public interface TarefasRepository extends JpaRepository<Tarefa, Long> {
 
     // Busca combinando status, data e tag
     @Query("""
-    SELECT t FROM Tarefa t
-    JOIN t.tags tag
+    SELECT DISTINCT t FROM Tarefa t
+    LEFT JOIN t.tags tag
     WHERE t.user = :user
       AND (:status IS NULL OR t.status = :status)
-      AND (:tag IS NULL OR tag = :tag)
+      AND (:tag IS NULL OR (:tag = 'sem_tag' AND t.tags IS EMPTY) OR tag = :tag)
       AND (:dataInicio IS NULL OR t.dataVencimento >= :dataInicio)
       AND (:dataFim IS NULL OR t.dataVencimento <= :dataFim)
     ORDER BY t.id ASC

@@ -143,25 +143,23 @@
                     <select name="filtroStatus" class="form-control">
                         <option value="todas" th:selected="${filtroStatus=='todas'}">Todas as Tarefas</option>
                         <option value="pendente" th:selected="${filtroStatus=='pendente'}">Pendente</option>
-                        <option value="fazendo" th:selected="${filtroStatus=='fazendo'}">Em Andamento</option>
+                        <option value="fazendo" th:selected="${filtroStatus=='fazendo'}">Fazendo</option>
                         <option value="concluida" th:selected="${filtroStatus=='concluida'}">Concluída</option>
                     </select>
                 </div>
 
                 <!-- Tag Filter -->
                 <div class="form-group">
-                    <label class="form-label">
-                        <i class="bi bi-tags"></i>
-                        Tag:
-                    </label>
-                    <div class="input-with-icon">
-                        <input list="tagsExistentes" name="tag" th:value="${tag}"
-                               placeholder="ex: trabalho, urgente, pessoal" class="form-control" />
-                        <i class="bi bi-tag input-icon"></i>
-                    </div>
-                    <datalist id="tagsExistentes">
-                        <option th:each="t : ${tagsExistentes}" th:value="${t}"></option>
-                    </datalist>
+                    <label class="form-label">Filtrar por Tag:</label>
+                    <select name="tag" class="form-control">
+                        <option value="" th:selected="${tag == null || tag == ''}">Todas as tags</option>
+                        <option value="sem_tag" th:selected="${tag == 'sem_tag'}">Sem tag</option>
+                        <option th:each="t : ${tagsExistentes}"
+                                th:value="${t}"
+                                th:text="${t}"
+                                th:selected="${t == tag}">
+                        </option>
+                    </select>
                 </div>
 
                 <!-- Date Range Filters -->
@@ -281,7 +279,7 @@
                         </div>
 
                         <!-- Direita: Botão de Filtros (Movido para cá) -->
-                        <button class="btn btn-outline sidebar-toggle-desktop" id="sidebarToggleDesktop">
+                        <button class="btn btn-primary sidebar-toggle-desktop" id="sidebarToggleDesktop">
                             <i class="bi bi-funnel"></i>
                             Filtros
                         </button>
@@ -320,7 +318,7 @@
                                     </label>
                                     <select th:field="*{status}" class="form-control">
                                         <option th:value="PENDENTE">Pendente</option>
-                                        <option th:value="FAZENDO">Em Andamento</option>
+                                        <option th:value="FAZENDO">Fazendo</option>
                                         <option th:value="CONCLUIDA">Concluída</option>
                                     </select>
                                 </div>
@@ -360,7 +358,7 @@
 
                         <!-- Logout Form -->
                         <form th:action="@{/logout}" method="post" class="logout-form">
-                            <button type="submit" class="btn btn-danger logout-btn">
+                            <button type="submit" class="btn btn-danger logout-btn" style="color: white;">
                                 <i class="bi bi-box-arrow-right"></i>
                                 Sair
                             </button>
@@ -413,11 +411,11 @@
 
                                 <!-- Task Actions -->
                                 <div class="task-actions">
-                                    <button type="button" class="btn btn-primary edit-btn-placeholder"
-                                            onclick="showEditPlaceholder()">
-                                        <i class="bi bi-pencil"></i>
+                                    <a th:href="@{/tarefas/{id}/editar-tarefa(id=${tarefa.id})}"
+                                       class="btn btn-primary edit-btn-placeholder"
+                                       style="text-decoration: none; color: white;">
                                         Editar
-                                    </button>
+                                    </a>
 
                                     <a th:if="${tarefa.status.name() != 'CONCLUIDA'}"
                                        th:href="@{/tarefas/{id}/marcar-como/CONCLUIDA(id=${tarefa.id})}"

@@ -57,7 +57,7 @@ public class TarefasController {
 
 
         // Pega todas as tags existentes (não duplicadas)
-        Set<String> tagsExistentes = service.listarTagsExistentes();
+        Set<String> tagsExistentes = service.listarTagsExistentes(usuarioLogado);
 
 
         model.addAttribute("tarefas", tarefas);
@@ -143,15 +143,27 @@ public class TarefasController {
     )
     {
         Tarefa tarefa_edicao = service.buscarTarefaEdicao(id, usuarioLogado); // encontra a tarefa a ser editada
-        model.addAttribute("tarefa", tarefa_edicao); // faz com que as infos da tarefa vão pro html
 
-        return "EdicaoTarefas";
+        TarefaForm form = new TarefaForm();
+        form.setTexto(tarefa_edicao.getTexto());
+        form.setDataVencimento(tarefa_edicao.getDataVencimento());
+        form.setStatus(tarefa_edicao.getStatus());
+
+        if (tarefa_edicao.getTags() != null) { // converte de set para string novamente
+            String tagsComoTexto = String.join(", ", tarefa_edicao.getTags());
+            form.setTagsString(tagsComoTexto);
+        }
+
+        model.addAttribute("tarefaForm", form); // envio do form já preenchido
+        model.addAttribute("idTarefa", id);
+
+        return "tarefas/EdicaoTarefas";
     }
 
     @PostMapping("/{id}/editar-tarefa")
     public String salvarEdicao (
             @PathVariable Long id,
-            @ModelAttribute Tarefa tarefa,
+            @ModelAttribute TarefaForm tarefa,
             @AuthenticationPrincipal User usuarioLogado
     )
     {
