@@ -181,7 +181,16 @@
       document.body.classList.remove('sidebar-open');
     }
 
-    sidebarToggle?.addEventListener('click', openSidebar);
+    function toggleSidebar() {
+      if (sidebar.classList.contains('open')) {
+        closeSidebar();
+      }
+      else {
+        openSidebar();
+      }
+    }
+
+    sidebarToggle?.addEventListener('click', toggleSidebar);
     sidebarToggleMobile?.addEventListener('click', openSidebar);
     sidebarClose?.addEventListener('click', closeSidebar);
     overlay?.addEventListener('click', closeSidebar);
@@ -321,6 +330,10 @@
   .admin-sidebar .nav-link.text-danger:hover {
     color: #bb2d3b !important;
     background: #fff5f5;
+  }
+
+  body.sidebar-open .admin-main {
+    margin-left: 320px;
   }
 
   /* --- HEADER & TÍTULOS --- */

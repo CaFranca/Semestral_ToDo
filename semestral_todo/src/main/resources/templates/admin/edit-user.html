@@ -159,7 +159,16 @@
       document.body.classList.remove('sidebar-open');
     }
 
-    sidebarToggle?.addEventListener('click', openSidebar);
+    function toggleSidebar() {
+      if (sidebar.classList.contains('open')) {
+        closeSidebar();
+      }
+      else {
+        openSidebar();
+      }
+    }
+
+    sidebarToggle?.addEventListener('click', toggleSidebar);
     sidebarToggleMobile?.addEventListener('click', openSidebar);
     sidebarClose?.addEventListener('click', closeSidebar);
     overlay?.addEventListener('click', closeSidebar);
@@ -443,6 +452,10 @@
     transition: var(--transition);
   }
   .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+  body.sidebar-open .admin-main {
+    margin-left: 320px;
+  }
 
   @media (max-width: 768px) {
     .admin-sidebar { width: 85%; max-width: 300px; left: -100%; }
