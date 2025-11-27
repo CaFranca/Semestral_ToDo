@@ -23,6 +23,11 @@
             </div>
 
             <div class="form-container p-3">
+                <div th:if="${error}" class="alert alert-danger" role="alert"
+                     style="color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; padding: .75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: .25rem;">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span th:text="${error}"></span>
+                </div>
                 <form th:action="@{/register}" th:object="${user}" method="post" class="task-form">
                     <div class="form-group">
                         <label for="name" class="form-label">

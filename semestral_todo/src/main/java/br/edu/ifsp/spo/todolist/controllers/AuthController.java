@@ -31,6 +31,12 @@ public class AuthController {
 
     @PostMapping("/register")
     public String register(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
+
+        if (user.getPassword() == null || user.getPassword().length() < 6) {
+            redirectAttributes.addFlashAttribute("error", "A senha deve ter no mínimo 6 caracteres.");
+            return "redirect:/register";
+        }
+
         // Check if email already exists
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             redirectAttributes.addFlashAttribute("error", "Email já está em uso.");
