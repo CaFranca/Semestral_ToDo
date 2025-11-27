@@ -47,12 +47,12 @@ public class TarefasController {
         }
 
         var tarefas = service.listar(filtroStatus, tag, dataInicio, dataFim, ordem, usuarioLogado);
-        tarefas.sort(
-                Comparator.comparing(
-                        Tarefa::getDataVencimento,
-                        Comparator.nullsLast(Comparator.naturalOrder())
-                )
-        );
+//        tarefas.sort(
+//                Comparator.comparing(
+//                        Tarefa::getDataVencimento,
+//                        Comparator.nullsLast(Comparator.naturalOrder())
+//                )
+//        );
 
 
 

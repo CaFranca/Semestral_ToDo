@@ -190,10 +190,14 @@
                         <i class="bi bi-sort-down"></i>
                         Ordenar por:
                     </label>
-                    <select name="ordem" class="form-control">
-                        <option value="asc" th:selected="${ordem=='asc'}">ID Crescente</option>
-                        <option value="desc" th:selected="${ordem=='desc'}">ID Decrescente</option>
-                    </select>
+                    <label>
+                        <select name="ordem" class="form-control">
+                            <option value="data" th:selected="${ordem=='data'}">Data de Vencimento</option>
+
+                            <option value="asc" th:selected="${ordem=='asc'}">ID Crescente</option>
+                            <option value="desc" th:selected="${ordem=='desc'}">ID Decrescente</option>
+                        </select>
+                    </label>
                 </div>
 
                 <!-- Filter Actions -->
@@ -208,46 +212,6 @@
                     </button>
                 </div>
             </form>
-        </div>
-    </aside>
-
-    <!-- Edit Sidebar -->
-    <aside class="edit-sidebar" id="editSidebar" style="display: none;">
-        <div class="edit-sidebar-header">
-            <h3>
-                <i class="bi bi-pencil"></i>
-                Editar Tarefa
-            </h3>
-            <button class="edit-sidebar-close" id="editSidebarClose">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-
-        <div class="edit-sidebar-content">
-            <div id="taskPreview" class="task-preview">
-                <div class="task-title">Funcionalidade de edição em desenvolvimento</div>
-                <div class="task-details">
-                    <span class="status-badge status-pending">Em breve</span>
-                </div>
-            </div>
-            <div class="edit-form-placeholder">
-                <div class="placeholder-message">
-                    <i class="bi bi-tools"
-                       style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
-                    <h4>Funcionalidade em Desenvolvimento</h4>
-                    <p>A edição de tarefas estará disponível em breve!</p>
-                </div>
-            </div>
-            <div class="edit-sidebar-actions">
-                <button type="button" class="btn btn-secondary" id="cancelEdit">
-                    <i class="bi bi-x-circle"></i>
-                    Fechar
-                </button>
-                <button type="button" class="btn btn-primary" disabled>
-                    <i class="bi bi-clock"></i>
-                    Em Breve
-                </button>
-            </div>
         </div>
     </aside>
 

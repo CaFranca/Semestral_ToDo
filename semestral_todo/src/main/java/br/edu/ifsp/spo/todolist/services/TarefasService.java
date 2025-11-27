@@ -50,6 +50,7 @@ public class TarefasService {
                 filtroStatus = "concluida";
             }
             statusEnum = Status.valueOf(filtroStatus.toUpperCase());
+
         }
 
 
@@ -170,12 +171,27 @@ public class TarefasService {
      * Aplica ordenação por ID
      */
     private List<Tarefa> ordenar(List<Tarefa> tarefas, String ordem) {
+        // Cria cópia mutável para evitar erro do Hibernate
+        List<Tarefa> listaParaOrdenar = new java.util.ArrayList<>(tarefas);
+
         if ("desc".equalsIgnoreCase(ordem)) {
-            tarefas.sort((a, b) -> b.getId().compareTo(a.getId()));
+            // Opção 1: ID Decrescente
+            listaParaOrdenar.sort((a, b) -> b.getId().compareTo(a.getId()));
+
+        } else if ("asc".equalsIgnoreCase(ordem)) {
+            // Opção 2: ID Crescente
+            listaParaOrdenar.sort((a, b) -> a.getId().compareTo(b.getId()));
+
         } else {
-            tarefas.sort((a, b) -> a.getId().compareTo(b.getId()));
+            // Opção 3 (Padrão "data"): Ordena por Data de Vencimento
+            // Usa nullsLast para que tarefas sem data fiquem no final (ou início, conforme preferir)
+            listaParaOrdenar.sort(java.util.Comparator.comparing(
+                    Tarefa::getDataVencimento,
+                    java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())
+            ));
         }
-        return tarefas;
+
+        return listaParaOrdenar;
     }
 
     public Set<String> listarTagsExistentes(User usuarioLogado){
