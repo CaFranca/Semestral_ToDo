@@ -1,10 +1,13 @@
 package br.edu.ifsp.spo.todolist.services;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import br.edu.ifsp.spo.todolist.forms.TarefaForm;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifsp.spo.todolist.models.Tarefa;
@@ -47,13 +50,18 @@ public class TarefasService {
                 filtroStatus = "concluida";
             }
             statusEnum = Status.valueOf(filtroStatus.toUpperCase());
+
         }
 
 
 
 // Busca simples (sem tag e sem datas)
-     if ((filtroTag == null || filtroTag.isBlank()) && dataInicio == null && dataFim == null) {
-         if (statusEnum != null) {
+        if (filtroTag != null && filtroTag.isBlank()) {
+            filtroTag = null;
+        }
+
+        if ((filtroTag == null || filtroTag.isBlank()) && dataInicio == null && dataFim == null) {
+            if (statusEnum != null) {
              return switch (statusEnum) {
                  case PENDENTE -> ordenar(tarefasRepository.findByUserAndStatus(usuario, Status.PENDENTE), ordem);
                  case FAZENDO -> ordenar(tarefasRepository.findByUserAndStatus(usuario, Status.FAZENDO), ordem);
@@ -140,13 +148,21 @@ public class TarefasService {
         return tarefa;
     }
 
-    public void editarTarefa(Long id, Tarefa dadosForm, User usuarioLogado){ // edita e salva as infos
+    public void editarTarefa(Long id, TarefaForm dadosForm, User usuarioLogado){ // edita e salva as infos
         Tarefa tarefa = this.buscarTarefaEdicao(id, usuarioLogado);
 
         tarefa.setTexto(dadosForm.getTexto());
         tarefa.setStatus(dadosForm.getStatus());
         tarefa.setDataVencimento(dadosForm.getDataVencimento());
-        tarefa.setTags(dadosForm.getTags());
+
+        Set<String> novasTags = new HashSet<>();
+        if (dadosForm.getTagsString() != null && !dadosForm.getTagsString().isBlank()) {
+            novasTags = Arrays.stream(dadosForm.getTagsString().split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .collect(Collectors.toSet());
+        }
+        tarefa.setTags(novasTags);
 
         tarefasRepository.save(tarefa);
     }
@@ -155,16 +171,34 @@ public class TarefasService {
      * Aplica ordenação por ID
      */
     private List<Tarefa> ordenar(List<Tarefa> tarefas, String ordem) {
+        // Cria cópia mutável para evitar erro do Hibernate
+        List<Tarefa> listaParaOrdenar = new java.util.ArrayList<>(tarefas);
+
         if ("desc".equalsIgnoreCase(ordem)) {
-            tarefas.sort((a, b) -> b.getId().compareTo(a.getId()));
+            // Opção 1: ID Decrescente
+            listaParaOrdenar.sort((a, b) -> b.getId().compareTo(a.getId()));
+
+        } else if ("asc".equalsIgnoreCase(ordem)) {
+            // Opção 2: ID Crescente
+            listaParaOrdenar.sort((a, b) -> a.getId().compareTo(b.getId()));
+
         } else {
-            tarefas.sort((a, b) -> a.getId().compareTo(b.getId()));
+            // Opção 3 (Padrão "data"): Ordena por Data de Vencimento
+            // Usa nullsLast para que tarefas sem data fiquem no final (ou início, conforme preferir)
+            listaParaOrdenar.sort(java.util.Comparator.comparing(
+                    Tarefa::getDataVencimento,
+                    java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())
+            ));
         }
-        return tarefas;
+
+        return listaParaOrdenar;
     }
 
-    public Set<String> listarTagsExistentes(){
-        return tarefasRepository.findAll().stream().flatMap(t -> t.getTags().stream()).collect(Collectors.toSet());
+    public Set<String> listarTagsExistentes(User usuarioLogado){
+        List<Tarefa> tarefas_user = tarefasRepository.findByUser(usuarioLogado);
+        return tarefas_user.stream()
+                .flatMap(tarefa -> tarefa.getTags().stream()) // pega as tags de cada tarefa
+                .collect(Collectors.toSet());
     }
 
 }

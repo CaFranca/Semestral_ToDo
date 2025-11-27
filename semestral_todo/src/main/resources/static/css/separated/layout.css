@@ -5,7 +5,7 @@
 .main-container {
   width: 90%;
   min-height: 100vh;
-  padding: 2rem 1rem;
+  padding: 64rem 32rem;
   margin: 0 auto;
 
   display: flex;
@@ -33,6 +33,7 @@
   transition: var(--transition);
   position: relative;
   min-height: auto; /* Remove fixed height */
+  padding: 48px
 }
 
 .task-app-container::before {
@@ -51,7 +52,6 @@
 }
 
 .task-app-container:hover {
-  transform: translateY(-5px);
   box-shadow: var(--box-shadow-hover);
 }
 

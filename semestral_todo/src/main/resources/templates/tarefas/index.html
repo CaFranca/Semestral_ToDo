@@ -46,7 +46,6 @@
             flex-direction: column;
         }
 
-        /* O segredo do alinhamento está aqui */
         .section-header {
             display: flex;
             justify-content: space-between; /* Joga um pra esquerda, outro pra direita */
@@ -143,25 +142,23 @@
                     <select name="filtroStatus" class="form-control">
                         <option value="todas" th:selected="${filtroStatus=='todas'}">Todas as Tarefas</option>
                         <option value="pendente" th:selected="${filtroStatus=='pendente'}">Pendente</option>
-                        <option value="fazendo" th:selected="${filtroStatus=='fazendo'}">Em Andamento</option>
+                        <option value="fazendo" th:selected="${filtroStatus=='fazendo'}">Fazendo</option>
                         <option value="concluida" th:selected="${filtroStatus=='concluida'}">Concluída</option>
                     </select>
                 </div>
 
                 <!-- Tag Filter -->
                 <div class="form-group">
-                    <label class="form-label">
-                        <i class="bi bi-tags"></i>
-                        Tag:
-                    </label>
-                    <div class="input-with-icon">
-                        <input list="tagsExistentes" name="tag" th:value="${tag}"
-                               placeholder="ex: trabalho, urgente, pessoal" class="form-control" />
-                        <i class="bi bi-tag input-icon"></i>
-                    </div>
-                    <datalist id="tagsExistentes">
-                        <option th:each="t : ${tagsExistentes}" th:value="${t}"></option>
-                    </datalist>
+                    <label class="form-label">Filtrar por Tag:</label>
+                    <select name="tag" class="form-control">
+                        <option value="" th:selected="${tag == null || tag == ''}">Todas as tags</option>
+                        <option value="sem_tag" th:selected="${tag == 'sem_tag'}">Sem tag</option>
+                        <option th:each="t : ${tagsExistentes}"
+                                th:value="${t}"
+                                th:text="${t}"
+                                th:selected="${t == tag}">
+                        </option>
+                    </select>
                 </div>
 
                 <!-- Date Range Filters -->
@@ -193,10 +190,14 @@
                         <i class="bi bi-sort-down"></i>
                         Ordenar por:
                     </label>
-                    <select name="ordem" class="form-control">
-                        <option value="asc" th:selected="${ordem=='asc'}">ID Crescente</option>
-                        <option value="desc" th:selected="${ordem=='desc'}">ID Decrescente</option>
-                    </select>
+                    <label>
+                        <select name="ordem" class="form-control">
+                            <option value="data" th:selected="${ordem=='data'}">Data de Vencimento</option>
+
+                            <option value="asc" th:selected="${ordem=='asc'}">ID Crescente</option>
+                            <option value="desc" th:selected="${ordem=='desc'}">ID Decrescente</option>
+                        </select>
+                    </label>
                 </div>
 
                 <!-- Filter Actions -->
@@ -211,46 +212,6 @@
                     </button>
                 </div>
             </form>
-        </div>
-    </aside>
-
-    <!-- Edit Sidebar -->
-    <aside class="edit-sidebar" id="editSidebar" style="display: none;">
-        <div class="edit-sidebar-header">
-            <h3>
-                <i class="bi bi-pencil"></i>
-                Editar Tarefa
-            </h3>
-            <button class="edit-sidebar-close" id="editSidebarClose">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-
-        <div class="edit-sidebar-content">
-            <div id="taskPreview" class="task-preview">
-                <div class="task-title">Funcionalidade de edição em desenvolvimento</div>
-                <div class="task-details">
-                    <span class="status-badge status-pending">Em breve</span>
-                </div>
-            </div>
-            <div class="edit-form-placeholder">
-                <div class="placeholder-message">
-                    <i class="bi bi-tools"
-                       style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
-                    <h4>Funcionalidade em Desenvolvimento</h4>
-                    <p>A edição de tarefas estará disponível em breve!</p>
-                </div>
-            </div>
-            <div class="edit-sidebar-actions">
-                <button type="button" class="btn btn-secondary" id="cancelEdit">
-                    <i class="bi bi-x-circle"></i>
-                    Fechar
-                </button>
-                <button type="button" class="btn btn-primary" disabled>
-                    <i class="bi bi-clock"></i>
-                    Em Breve
-                </button>
-            </div>
         </div>
     </aside>
 
@@ -271,17 +232,16 @@
                     </div>
                 </div>
 
-                <!-- Add Task Section (AQUI ESTÁ A MUDANÇA) -->
+                <!-- Add Task Section -->
                 <div class="form-section">
                     <div class="section-header">
-                        <!-- Esquerda: Ícone + Texto Agrupados -->
                         <div class="header-title-group">
                             <i class="bi bi-plus-circle"></i>
                             <h2>Nova Tarefa</h2>
                         </div>
 
                         <!-- Direita: Botão de Filtros (Movido para cá) -->
-                        <button class="btn btn-outline sidebar-toggle-desktop" id="sidebarToggleDesktop">
+                        <button class="btn btn-primary sidebar-toggle-desktop" id="sidebarToggleDesktop">
                             <i class="bi bi-funnel"></i>
                             Filtros
                         </button>
@@ -320,7 +280,7 @@
                                     </label>
                                     <select th:field="*{status}" class="form-control">
                                         <option th:value="PENDENTE">Pendente</option>
-                                        <option th:value="FAZENDO">Em Andamento</option>
+                                        <option th:value="FAZENDO">Fazendo</option>
                                         <option th:value="CONCLUIDA">Concluída</option>
                                     </select>
                                 </div>
@@ -333,10 +293,9 @@
                                     </label>
                                     <div class="input-with-icon">
                                         <input type="text" th:field="*{tagsString}" class="form-control"
-                                               placeholder="trabalho, urgente, pessoal" />
+                                               placeholder="Ex: trabalho, urgente, pessoal" />
                                         <i class="bi bi-tag input-icon"></i>
                                     </div>
-                                    <small class="form-hint">Separe por vírgula</small>
                                 </div>
                             </div>
 
@@ -354,13 +313,12 @@
                     <div class="section-header">
                         <div class="tasks-header-left">
                             <i class="bi bi-list-task"></i>
-                            <h2>Minhas Tarefas</h2>
-                            <span class="task-count" th:text="'(' + ${tarefas.size()} + ')'"></span>
+                            <h2>Minhas Tarefas <span class="task-count" th:text="'(' + ${tarefas.size()} + ')'"></span> </h2>
                         </div>
 
                         <!-- Logout Form -->
                         <form th:action="@{/logout}" method="post" class="logout-form">
-                            <button type="submit" class="btn btn-danger logout-btn">
+                            <button type="submit" class="btn btn-danger logout-btn" style="color: white;">
                                 <i class="bi bi-box-arrow-right"></i>
                                 Sair
                             </button>
@@ -413,11 +371,11 @@
 
                                 <!-- Task Actions -->
                                 <div class="task-actions">
-                                    <button type="button" class="btn btn-primary edit-btn-placeholder"
-                                            onclick="showEditPlaceholder()">
-                                        <i class="bi bi-pencil"></i>
+                                    <a th:href="@{/tarefas/{id}/editar-tarefa(id=${tarefa.id})}"
+                                       class="btn btn-primary edit-btn-placeholder"
+                                       style="text-decoration: none; color: white;">
                                         Editar
-                                    </button>
+                                    </a>
 
                                     <a th:if="${tarefa.status.name() != 'CONCLUIDA'}"
                                        th:href="@{/tarefas/{id}/marcar-como/CONCLUIDA(id=${tarefa.id})}"
