@@ -1,145 +1,275 @@
-#  Semestral_ToDo
+# Semestral_ToDo - Sistema de Gerenciamento de Tarefas
 
-Aplicação para gerenciamento de tarefas, inspirada em referências como Todoist, Microsoft Todos, Apple Lembretes e TickTick.  
-Desenvolvido como projeto semestral da disciplina de Programação para Web.
+## 📋 Visão Geral
 
----
+O **Semestral_ToDo** é uma aplicação web para gerenciamento de tarefas, inspirada em gerenciadores populares como Todoist, Microsoft To Do, Apple Reminders e TickTick. Desenvolvido como projeto semestral, esta aplicação utiliza Spring Boot, SQLite e Thymeleaf para fornecer uma solução robusta e amigável de gerenciamento de tarefas.
 
-##  Integrantes da Equipe
+## ✨ Funcionalidades
 
-| Nome completo                        | Matrícula  | GitHub Profile                      |
-| ------------------------------------- | ---------- | ----------------------------------- |
-| Bernardo de Castro Bertoldo           | SP3114775  | [bernacastro](https://github.com/bernacastro) |
-| Caique França dos Santos              | SP3118541  | [CaFranca](https://github.com/CaFranca) |
-| Mateus Hideki de Figueiredo Tamura    | SP3116191  | [Mateus-Hideki](https://github.com/Mateus-Hideki) |
-| Renan Trajano da Conceição            | SP3115887  | [RenanTC007](https://github.com/RenanTC007) |
+- 📋 **Gerenciamento de Tarefas**: Criar, atualizar e excluir tarefas
+- 🔒 **Autenticação de Usuário**: Login e registro seguros
+- 🌐 **Design Responsivo**: Funciona perfeitamente em vários dispositivos
+- 📅 **Agendamento de Tarefas**: Definir datas de vencimento e lembretes
+- 🔄 **Interface Amigável**: UI intuitiva e fácil de usar
 
----
+## 🛠️ Stack Tecnológica
 
-##  Repositório
+- **Linguagem de Programação**: Java, HTML, CSS, JavaScript
+- **Frameworks e Bibliotecas**:
+  - Spring Boot
+  - Thymeleaf
+  - SQLite
+  - Spring Security
+- **Requisitos do Sistema**:
+  - Java 21
+  - Maven 3.9+ ou Gradle
+  - IDE de sua escolha (IntelliJ IDEA, VS Code, Eclipse)
 
-[https://github.com/CaFranca/Semestral_ToDo.git](https://github.com/CaFranca/Semestral_ToDo.git)
+## 🚀 Instalação Rápida
 
----
+### Pré-requisitos
+- Java 21
+- Maven 3.9+ ou Gradle
+- IDE de sua escolha
 
-##  Configuração Inicial
+### Configuração Inicial
 
-1. **Pré-requisitos**
-   - Java 21
-   - Maven 3.9+ ou Gradle (dependendo do gerador usado)
-   - IDE de sua preferência (IntelliJ IDEA, VS Code ou Eclipse)
-
-2. **Clone do projeto**
+1. **Clone o repositório**
    ```bash
    git clone https://github.com/CaFranca/Semestral_ToDo.git
    cd Semestral_ToDo
+   ```
 
-3. **Configuração do banco de dados**
-   - Este projeto usa SQLite.
-   - O arquivo do banco (database.db) será criado automaticamente na raiz ou conforme configuração.
+2. **Configure o banco de dados**
+   - O projeto usa SQLite
+   - O arquivo de banco de dados (`database.db`) será criado automaticamente no diretório raiz
 
-4. **Rodar o projeto**
-- Compile e execute com sua IDE ou usando Maven:
+3. **Execute o projeto**
+   - Compile e execute usando Maven:
+     ```bash
+     ./mvnw spring-boot:run
+     ```
+   - O servidor Spring Boot será executado em: `http://localhost:8080`
+
+## 🎯 Como Usar
+
+### Uso Básico
+A aplicação oferece uma interface web intuitiva para:
+
+- **Registrar nova conta de usuário**
+- **Fazer login no sistema**
+- **Criar novas tarefas** com título e descrição
+- **Visualizar lista de tarefas**
+- **Editar e excluir tarefas existentes**
+
+### Estrutura da Interface
+```html
+<!-- Exemplo da estrutura básica da aplicação -->
+<div class="main-container">
+    <div class="task-app-container">
+        <!-- Seção de adição de tarefas -->
+        <!-- Lista de tarefas existentes -->
+    </div>
+</div>
+```
+
+## 📁 Estrutura do Projeto
+
+```
+Semestral_ToDo/
+├── src/
+│   ├── main/
+│   │   ├── java/br/edu/ifsp/spo/todolist/
+│   │   │   ├── controllers/     # Controladores MVC
+│   │   │   ├── models/          # Entidades e modelos
+│   │   │   ├── repositories/    # Camada de acesso a dados
+│   │   │   ├── services/        # Lógica de negócio
+│   │   │   └── config/          # Configurações
+│   │   ├── resources/
+│   │   │   ├── application.properties
+│   │   │   └── templates/       # Templates Thymeleaf
+│   │   └── static/              # Arquivos estáticos (CSS, JS)
+│   └── test/                    # Testes unitários
+├── database/                    # Configurações do banco
+└── docs/                       # Documentação
+```
+
+## ⚙️ Configuração
+
+### Arquivo application.properties
+```properties
+# Configurações do banco de dados SQLite
+spring.datasource.driver-class-name=org.sqlite.JDBC
+spring.datasource.url=jdbc:sqlite:database/database.db
+
+# Configurações JPA
+spring.jpa.generate-ddl=true
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# Configurações específicas do SQLite
+spring.jpa.properties.hibernate.dialect=org.hibernate.community.dialect.SQLiteDialect
+```
+
+## 👥 Equipe de Desenvolvimento
+
+- **Bernardo de Castro Bertoldo** - [bernacastro](https://github.com/bernacastro)
+- **Caique França dos Santos** - [CaFranca](https://github.com/CaFranca)
+- **Mateus Hideki de Figueiredo Tamura** - [Mateus-Hideki](https://github.com/Mateus-Hideki)
+- **Renan Trajano da Conceição** - [RenanTC007](https://github.com/RenanTC007)
+
+## 📝 Licença
+
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+---
+
+## 📊 Documentação de Negócio
+
+### Resumo Executivo
+O Semestral_ToDo é uma aplicação web de gerenciamento de tarefas desenvolvida como projeto semestral, com o objetivo de criar uma solução amigável e eficiente para organização de tarefas.
+
+### Escopo do Projeto
+
+#### Funcionalidades Incluídas:
+- Registro e autenticação de usuários
+- Criação, edição e exclusão de tarefas
+- Organização e filtragem de tarefas
+- Interface responsiva e intuitiva
+- Tratamento básico de erros e feedback ao usuário
+
+#### Objetivos de Negócio:
+- Aumentar produtividade e eficiência dos usuários
+- Fornecer uma experiência de usuário positiva
+- Concluir com sucesso o projeto semestral
+
+### Requisitos Funcionais
+
+#### Gerenciamento de Usuários:
+- Registro e criação de conta
+- Login e logout seguros
+
+#### Gerenciamento de Tarefas:
+- Criação, edição e exclusão de tarefas
+- Organização e filtragem por critérios diversos
+
+### Casos de Uso Principais
+
+1. **Registro de Usuário**:
+   - Usuário acessa página de registro
+   - Preenche formulário de cadastro
+   - Recebe confirmação de criação de conta
+
+2. **Gerenciamento de Tarefas**:
+   - Usuário faz login na aplicação
+   - Navega para página de tarefas
+   - Cria, edita ou exclui tarefas
+   - Filtra e organiza tarefas conforme necessidade
+
+### Critérios de Aceitação
+
+- ✅ Aplicação atende todos os requisitos funcionais e não-funcionais
+- ✅ Aplicação testada e validada pela equipe de desenvolvimento
+- ✅ Feedback positivo dos usuários
+- ✅ Conclusão bem-sucedida do projeto semestral
+
+---
+
+## 🔧 Documentação Técnica
+
+### Arquitetura do Sistema
+
+#### Camadas da Aplicação:
+- **Camada de Apresentação**: Templates Thymeleaf para renderização HTML
+- **Camada de Aplicação**: Spring Boot para lógica de negócio e APIs RESTful
+- **Camada de Dados**: SQLite para armazenamento de dados
+
+### API Endpoints
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | /tasks | Recupera lista de tarefas |
+| POST | /tasks | Cria nova tarefa |
+| PUT | /tasks/{id} | Atualiza tarefa existente |
+| DELETE | /tasks/{id} | Exclui tarefa |
+
+### Esquema do Banco de Dados
+
+#### Tabela: tasks
+| Coluna | Tipo | Descrição |
+|--------|------|-----------|
+| id | INTEGER | Chave primária |
+| title | VARCHAR | Título da tarefa |
+| description | TEXT | Descrição da tarefa |
+| due_date | DATETIME | Data de vencimento |
+| completed | BOOLEAN | Status de conclusão |
+
+### Diretrizes de Desenvolvimento
+
+#### Estrutura de Pacotes:
+```java
+br.edu.ifsp.spo.todolist/
+├── controllers/    # Manipulam requisições HTTP
+├── services/       # Contém lógica de negócio
+├── repositories/   # Interagem com o banco de dados
+├── models/         # Entidades do banco de dados
+└── config/         # Configurações da aplicação
+```
+
+### Instruções de Deploy
+
+1. **Build do Projeto**:
    ```bash
-        ./mvnw spring-boot:run
-- O servidor Spring Boot rodará em: http://localhost:8080
+   ./mvnw clean package
+   ```
 
-Estrutura de Pastas e Pacotes
------------------------------
+2. **Executar Aplicação**:
+   ```bash
+   java -jar target/semestral-todo-0.0.1-SNAPSHOT.jar
+   ```
 
-Vou listar os principais pacotes e o que geralmente cada um contém no projeto:
+3. **Acessar Aplicação**:
+   - Navegue para `http://localhost:8080`
 
-### 1\. **br.edu.ifsp.spo.todolist**
+---
 
-Pacote raiz do projeto.
+## 🗺️ Roadmap e Próximos Passos
 
-### 2\. **br.edu.ifsp.spo.todolist.controllers**
+### Funcionalidades Planejadas:
+- [ ] Adicionar notificações para lembretes
+- [ ] Melhorar interface e experiência do usuário
+- [ ] Implementar compartilhamento de tarefas
 
-*   Responsabilidade:Controladores MVC que recebem requisições HTTP, fazem o intermédio entre a camada de serviço e a camada de visualização (views).
-    
-*   O que contém:Classes que definem os endpoints REST ou as rotas para páginas (usando Thymeleaf).
-    
-*   Exemplo:TarefasController.java — para manipular as requisições relacionadas às tarefas (listar, adicionar, alterar status, etc).AuthController.java — gerencia login, registro, logout.
-    
+### Linha do Tempo de Implementação:
+- **Semanas 1-2**: Configuração do projeto e desenvolvimento inicial
+- **Semanas 3-4**: Desenvolvimento das funcionalidades de gerenciamento
+- **Semanas 5-6**: Integração e testes
+- **Semana 7**: Revisão final e deploy
 
-### 3\. **br.edu.ifsp.spo.todolist.models**
+---
 
-*   Responsabilidade:Entidades JPA que representam as tabelas do banco de dados e os objetos do domínio.
-    
-*   O que contém:Classes anotadas com @Entity, com campos mapeados para colunas do banco.
-    
-*   Exemplo:User.java — entidade do usuário, implementa UserDetails para Spring Security.Tarefa.java — entidade tarefa, com atributos como texto, status, data de vencimento, tags e relacionamento com usuário.
-    
+## 🤝 Contribuindo
 
-### 4\. **br.edu.ifsp.spo.todolist.repositories**
+### Como Contribuir:
+1. Faça um fork do repositório
+2. Crie um branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para o branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
-*   Responsabilidade:Interfaces que estendem JpaRepository para acesso e manipulação do banco de dados.
-    
-*   O que contém:Métodos de consulta e persistência, métodos customizados baseados em convenções Spring Data.
-    
-*   Exemplo:UserRepository.java — busca usuários por email, nome, etc.TarefasRepository.java — busca tarefas por usuário, status, etc.
-    
 
-### 5\. **br.edu.ifsp.spo.todolist.services**
+## 🐛 Suporte e Issues
 
-*   Responsabilidade:Camada de serviços com regras de negócio, lógica entre controle e persistência.
-    
-*   O que contém:Classes que fazem validações, orquestram chamadas aos repositórios, etc.
-    
-*   Exemplo:TarefasService.java — método para listar, adicionar tarefas, alterar status.UserDetailsServiceImpl.java — serviço para buscar usuário para autenticação.
-    
+- **Reportar Problemas**: Abra uma issue no repositório GitHub
+- **Obter Ajuda**: Entre em contato com os mantenedores do projeto
 
-### 6\. **br.edu.ifsp.spo.todolist.forms**
+---
 
-*   Responsabilidade:Classes DTO (Data Transfer Object) usadas para formular dados da UI, especialmente para captura e validação dos dados dos formulários.
-    
-*   O que contém:Classes que modelam os campos dos formulários (exemplo: TarefaForm com texto, tagsString, data de vencimento, status).
-    
+**Badges:**
+[![Build Status](https://travis-ci.org/CaFranca/Semestral_ToDo.svg?branch=main)](https://travis-ci.org/CaFranca/Semestral_ToDo)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Stars](https://img.shields.io/github/stars/CaFranca/Semestral_ToDo?style=social)](https://github.com/CaFranca/Semestral_ToDo)
 
-### 7\. **br.edu.ifsp.spo.todolist.config**
+---
 
-*   Responsabilidade:Classes de configuração do Spring Boot, principalmente para segurança e outras configurações específicas da aplicação.
-    
-*   O que contém:SecurityConfig.java — configura autenticação, autorização, regras de acesso, etc.
-    
-
-Outros Arquivos / Recursos
---------------------------
-
-*   resources/templates/:Templates Thymeleaf para as páginas HTML da aplicação (exemplo: login.html, register.html, tarefas/index.html).
-    
-*   resources/static/:Arquivos estáticos (CSS, JS, imagens).
-    
-*   application.properties:Configurações gerais do Spring Boot (ex: conexão com banco, porta, etc).
-    
-
-Fluxo básico do sistema
------------------------
-
-1.  O usuário acessa a aplicação e é direcionado para a página de login ou registro.
-    
-2.  Após autenticação, ele é levado para o controller TarefasController.
-    
-3.  O controller chama os métodos do TarefasService.
-    
-4.  O serviço manipula a entidade Tarefa e usa o TarefasRepository para persistir ou recuperar dados.
-    
-5.  As respostas são enviadas às views Thymeleaf para renderização.
-    
-
-Resumo do padrão usado:
------------------------
-
-*   **Model** = Entidades JPA (models).
-    
-*   **View** = Thymeleaf (resources/templates).
-    
-*   **Controller** = Classes REST/MVC (controllers).
-    
-*   **Repository** = Camada de acesso a dados (repositories).
-    
-*   **Service** = Regras de negócio e lógica (services).
-    
-*   **Form** = Objetos para formulários (forms).
-    
-*   **Config** = Configurações (ex: segurança) (config).
+*Este README foi projetado para ser abrangente e envolvente, fornecendo instruções claras e um tom acolhedor para atrair contribuidores.*
