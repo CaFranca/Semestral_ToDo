@@ -1,5 +1,18 @@
 # Semestral_ToDo - Sistema de Gerenciamento de Tarefas
 
+##  Integrantes da Equipe
+
+| Nome completo                        | Matrícula  | GitHub Profile                      |
+| ------------------------------------- | ---------- | ----------------------------------- |
+| Bernardo de Castro Bertoldo           | SP3114775  | [bernacastro](https://github.com/bernacastro) |
+| Caique França dos Santos              | SP3118541  | [CaFranca](https://github.com/CaFranca) |
+| Mateus Hideki de Figueiredo Tamura    | SP3116191  | [Mateus-Hideki](https://github.com/Mateus-Hideki) |
+| Renan Trajano da Conceição            | SP3115887  | [RenanTC007](https://github.com/RenanTC007) |
+
+---
+
+- **Video sobre o código** - [Video](https://youtu.be/nFzLTO3S-DQ)
+
 ## 📋 Visão Geral
 
 O **Semestral_ToDo** é uma aplicação web para gerenciamento de tarefas, inspirada em gerenciadores populares como Todoist, Microsoft To Do, Apple Reminders e TickTick. Desenvolvido como projeto semestral, esta aplicação utiliza Spring Boot, SQLite e Thymeleaf para fornecer uma solução robusta e amigável de gerenciamento de tarefas.
@@ -110,13 +123,6 @@ spring.jpa.show-sql=true
 # Configurações específicas do SQLite
 spring.jpa.properties.hibernate.dialect=org.hibernate.community.dialect.SQLiteDialect
 ```
-
-## 👥 Equipe de Desenvolvimento
-
-- **Bernardo de Castro Bertoldo** - [bernacastro](https://github.com/bernacastro)
-- **Caique França dos Santos** - [CaFranca](https://github.com/CaFranca)
-- **Mateus Hideki de Figueiredo Tamura** - [Mateus-Hideki](https://github.com/Mateus-Hideki)
-- **Renan Trajano da Conceição** - [RenanTC007](https://github.com/RenanTC007)
 
 ## 📝 Licença
 
